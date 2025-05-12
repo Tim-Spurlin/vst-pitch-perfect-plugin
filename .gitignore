@@ -1,0 +1,153 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# VST specific
+*.vst
+*.vst3
+*.component
+*.aaxplugin
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+build/
+build_*/
+cmake-build-*/
+
+# IDE specific files
+## Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.VC.db
+*.VC.opendb
+ipch/
+x64/
+x86/
+Debug/
+Release/
+enc_temp_folder/
+
+## Xcode
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+.build/
+
+## JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+cmake-build-*/
+out/
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# JUCE specific
+JuceLibraryCode/
+Builds/
+
+# Neural network models and data
+*.pt
+*.pb
+*.onnx
+*.tflite
+models/
+training_data/
+datasets/
+
+# Large media files
+*.wav
+*.mp3
+*.aif
+*.aiff
+*.flac
+*.ogg
+!examples/*.wav
+!test/resources/*.wav
+
+# TensorFlow cache
+.tensorflow/
+
+# Log files
+*.log
+logs/
+
+# Generated documentation
+docs/html/
+docs/doxygen/
+
+# Distribution files
+dist/
+installers/
+packages/
+
+# Dependency directories
+node_modules/
+vendor/
+external/
+
+# Credentials and configuration (never commit real keys)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+config.private.json
+secrets.json
+
+# Project specific 
+HarmonicAI.settings
+HarmonicAI.state
+*.cache
