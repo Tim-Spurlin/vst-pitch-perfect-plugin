@@ -1,6 +1,4 @@
-# vst-pitch-perfect-plugin# HarmonicAI - Revolutionary Vocal Processing VST Plugin
-
-![HarmonicAI Logo](assets/harmonicai_logo.png)
+# HarmonicAI - Revolutionary Vocal Processing VST Plugin
 
 ## Table of Contents
 - [Introduction](#introduction)
