@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vocal-model-server
+  labels:
+    app: vocal-model-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vocal-model-server
+  template:
+    metadata:
+      labels:
+        app: vocal-model-server
+    spec:
+      containers:
+      - name: model-server
+        image: gcr.io/vocal-transformation-ai/model-server:v1
+        resources:
+          requests:
+            cpu: "2"
+            memory: "8Gi"
+            nvidia.com/gpu: 1
+          limits:
+            cpu: "4"
+            memory: "16Gi"
+            nvidia.com/gpu: 1
+        ports:
+        - containerPort: 8500
+          name: grpc
+        - containerPort: 8501
+          name: rest
+        env:
+        - name: MODEL_NAME
+          value: "vocal_transformation_model"
+        - name: TF_ENABLE_GPU_MEMORY_GROWTH
+          value: "true"
+        - name: TF_GPU_THREAD_MODE
+          value: "gpu_private"
+        - name: TF_XLA_FLAGS
+          value: "--tf_xla_auto_jit=2 --tf_xla_cpu_global_jit"
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+        livenessProbe:
+          httpGet:
+            path: /v1/models/vocal_transformation_model
+            port: 8501
+          initialDelaySeconds: 300
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /v1/models/vocal_transformation_model
+            port: 8501
+          initialDelaySeconds: 60
+          periodSeconds: 10
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-storage-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vocal-model-service
+spec:
+  ports:
+  - port: 8500
+    targetPort: 8500
+    name: grpc
+  - port: 8501
+    targetPort: 8501
+    name: rest
+  selector:
+    app: vocal-model-server
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: model-storage-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard
