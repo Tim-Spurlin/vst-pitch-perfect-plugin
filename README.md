@@ -1798,6 +1798,2807 @@ graph LR
     style E fill:#fff3e0
     style I fill:#e3f2fd
 ```
+
+## 🎛️ User Interface
+
+### Plugin Interface Design
+
+#### Main Interface Layout
+```mermaid
+graph TB
+    subgraph "🎵 HarmonicAI Main Interface"
+        subgraph "📊 Visualization Panel"
+            A[Real-time Waveform Display]
+            B[Pitch Deviation Indicator]
+            C[Formant Activity Visualization]
+            D[Spectral Analysis View]
+        end
+        
+        subgraph "🎛️ Control Modules"
+            E[Correction Module]
+            F[Character Module]
+            G[Expression Module]
+            H[Effects Module]
+        end
+        
+        subgraph "⚙️ Advanced Panel"
+            I[Neural Network Settings]
+            J[Performance Optimization]
+            K[MIDI Mapping]
+            L[System Resources]
+        end
+        
+        subgraph "💾 Preset Management"
+            M[Preset Browser]
+            N[A/B Comparison]
+            O[Save/Load Presets]
+            P[Preset Categories]
+        end
+    end
+    
+    A --> E
+    B --> F
+    C --> G
+    D --> H
+    E --> I
+    F --> J
+    G --> K
+    H --> L
+    
+    style A fill:#e3f2fd
+    style E fill:#fff3e0
+    style I fill:#f3e5f5
+    style M fill:#e8f5e8
+```
+
+#### Interface Component Details
+
+**1. Real-time Visualization Components**
+```mermaid
+graph LR
+    subgraph "📈 Waveform Display"
+        A[Input Waveform<br/>Blue] --> B[Output Waveform<br/>Green]
+        B --> C[Pitch Grid Overlay<br/>Piano Roll]
+        C --> D[Note Names<br/>C, D, E, F, G, A, B]
+    end
+    
+    subgraph "🎯 Pitch Deviation"
+        E[Pitch Target Line<br/>White] --> F[Actual Pitch<br/>Yellow]
+        F --> G[Correction Applied<br/>Red when active]
+        G --> H[Cents Display<br/>±50 cents range]
+    end
+    
+    subgraph "🌈 Formant Activity"
+        I[F1 Frequency<br/>Red band] --> J[F2 Frequency<br/>Orange band]
+        J --> K[F3 Frequency<br/>Yellow band]
+        K --> L[F4 Frequency<br/>Green band]
+    end
+    
+    style A fill:#e3f2fd
+    style F fill:#fff9c4
+    style G fill:#ffcdd2
+    style I fill:#ffcdd2
+```
+
+**2. Control Module Layout**
+```mermaid
+flowchart TD
+    subgraph "🎼 Correction Module"
+        A[Key Signature Selector<br/>All 12 keys + Custom]
+        B[Scale Type Selector<br/>Major, Minor, Modal, Custom]
+        C[Correction Strength<br/>0-100% slider]
+        D[Correction Speed<br/>Natural to Robotic]
+        E[Note Transition Style<br/>Smooth, Stepped, Glide]
+    end
+    
+    subgraph "🎭 Character Module"
+        F[Formant Shift<br/>-2 to +2 octaves]
+        G[Voice Age<br/>Child to Elderly]
+        H[Voice Gender<br/>Male to Female spectrum]
+        I[Breathiness<br/>0-100% control]
+        J[Vocal Texture<br/>Smooth to Rough]
+    end
+    
+    subgraph "🎨 Expression Module"
+        K[Vibrato Depth<br/>0-100% intensity]
+        L[Vibrato Rate<br/>2-8 Hz range]
+        M[Dynamics Processing<br/>Compression/Expansion]
+        N[Articulation Enhancement<br/>Consonant clarity]
+        O[Timing Correction<br/>Rhythmic alignment]
+    end
+    
+    subgraph "✨ Effects Module"
+        P[De-esser<br/>Sibilance control]
+        Q[Breath Control<br/>Enhance/Remove]
+        R[Harmonic Exciter<br/>Brightness control]
+        S[Stereo Widening<br/>Spatial enhancement]
+        T[Doubling Effects<br/>Chorus/Delay]
+    end
+    
+    A --> F
+    B --> G
+    C --> H
+    D --> I
+    E --> J
+    F --> K
+    G --> L
+    H --> M
+    I --> N
+    J --> O
+    K --> P
+    L --> Q
+    M --> R
+    N --> S
+    O --> T
+    
+    style A fill:#e8f5e8
+    style F fill:#e3f2fd
+    style K fill:#fff3e0
+    style P fill:#f3e5f5
+```
+
+### Parameter Controls
+
+#### Advanced Parameter System
+```mermaid
+graph TD
+    subgraph "🎛️ Parameter Architecture"
+        A[Host Automation<br/>DAW Control] --> B[Parameter Manager<br/>Value Smoothing]
+        B --> C[MIDI CC Mapping<br/>Hardware Control]
+        C --> D[Preset System<br/>Value Storage]
+        D --> E[Real-time Processing<br/>Audio Engine]
+    end
+    
+    subgraph "📊 Parameter Types"
+        F[Float Parameters<br/>0.0 - 1.0 range]
+        G[Integer Parameters<br/>Discrete values]
+        H[Choice Parameters<br/>Enumerated options]
+        I[String Parameters<br/>Text input]
+    end
+    
+    subgraph "🔄 Parameter Modulation"
+        J[LFO Modulation<br/>Sine, Triangle, Square]
+        K[Envelope Following<br/>Audio-reactive]
+        L[MIDI Velocity<br/>Performance control]
+        M[Expression Pedal<br/>Continuous control]
+    end
+    
+    A --> F
+    B --> G
+    C --> H
+    D --> I
+    E --> J
+    F --> K
+    G --> L
+    H --> M
+    
+    style A fill:#e3f2fd
+    style F fill:#fff3e0
+    style J fill:#f3e5f5
+```
+
+#### Parameter Control Interface
+```cpp
+class ParameterControl {
+public:
+    enum class ParameterType {
+        Float,
+        Integer,
+        Choice,
+        Boolean
+    };
+    
+    struct ParameterInfo {
+        std::string name;
+        std::string label;
+        std::string description;
+        ParameterType type;
+        float minValue;
+        float maxValue;
+        float defaultValue;
+        std::vector<std::string> choices; // For choice parameters
+        std::string units;
+        bool automatable;
+        bool midiMappable;
+    };
+    
+    class ParameterSlider : public juce::Slider {
+    private:
+        ParameterInfo paramInfo;
+        std::unique_ptr<juce::AudioProcessorParameterWithID> parameter;
+        
+    public:
+        ParameterSlider(const ParameterInfo& info) : paramInfo(info) {
+            setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+            setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
+            setColour(juce::Slider::rotarySliderFillColourId, 
+                     juce::Colour::fromRGB(0, 150, 255));
+            
+            // Custom look and feel for HarmonicAI style
+            setLookAndFeel(&harmonicAILookAndFeel);
+            
+            // Parameter smoothing for audio-rate changes
+            parameter->beginChangeGesture();
+            setValue(paramInfo.defaultValue);
+            parameter->endChangeGesture();
+        }
+        
+        void paint(juce::Graphics& g) override {
+            // Custom painting for parameter visualization
+            auto bounds = getLocalBounds().toFloat();
+            
+            // Draw parameter value arc
+            auto centre = bounds.getCentre();
+            auto radius = std::min(bounds.getWidth(), bounds.getHeight()) / 2.0f - 2.0f;
+            auto valueAngle = juce::jmap(getValue(), 
+                                       paramInfo.minValue, paramInfo.maxValue,
+                                       -2.5f, 2.5f);
+            
+            // Background arc
+            g.setColour(juce::Colour::fromRGB(40, 40, 40));
+            g.drawEllipse(centre.x - radius, centre.y - radius, 
+                         radius * 2, radius * 2, 2.0f);
+            
+            // Value arc
+            g.setColour(juce::Colour::fromRGB(0, 150, 255));
+            juce::Path valueArc;
+            valueArc.addCentredArc(centre.x, centre.y, radius, radius,
+                                  0.0f, -2.5f, valueAngle, true);
+            g.strokePath(valueArc, juce::PathStrokeType(3.0f));
+            
+            // Parameter name and value
+            g.setColour(juce::Colours::white);
+            g.setFont(12.0f);
+            g.drawText(paramInfo.label, bounds.removeFromBottom(30), 
+                      juce::Justification::centred);
+            
+            g.setFont(10.0f);
+            auto valueText = juce::String(getValue(), 2) + " " + paramInfo.units;
+            g.drawText(valueText, bounds.removeFromBottom(20), 
+                      juce::Justification::centred);
+        }
+    };
+};
+```
+
+### Visualization Components
+
+#### Real-time Audio Visualization System
+```mermaid
+graph TB
+    subgraph "📈 Visualization Pipeline"
+        A[Audio Input Buffer<br/>512 samples] --> B[FFT Analysis<br/>2048 point FFT]
+        B --> C[Feature Extraction<br/>Spectral features]
+        C --> D[Visualization Data<br/>Formatted for display]
+        D --> E[GPU Rendering<br/>OpenGL/Metal]
+        E --> F[Display Update<br/>60 FPS refresh]
+    end
+    
+    subgraph "🎵 Visualization Types"
+        G[Waveform Display<br/>Time domain]
+        H[Spectrum Analyzer<br/>Frequency domain]
+        I[Pitch Tracking<br/>F0 over time]
+        J[Formant Display<br/>Resonant frequencies]
+        K[3D Spectogram<br/>Time-frequency-amplitude]
+    end
+    
+    A --> G
+    B --> H
+    C --> I
+    C --> J
+    D --> K
+    
+    style A fill:#ffebee
+    style F fill:#e8f5e8
+    style G fill:#e3f2fd
+    style H fill:#e3f2fd
+    style I fill:#e3f2fd
+    style J fill:#e3f2fd
+    style K fill:#e3f2fd
+```
+
+#### Advanced Visualization Implementation
+```cpp
+class HarmonicAIVisualizer : public juce::OpenGLAppComponent,
+                            public juce::Timer {
+private:
+    struct VisualizationData {
+        std::vector<float> waveformData;
+        std::vector<float> spectrumData;
+        std::vector<float> pitchData;
+        std::vector<std::array<float, 4>> formantData; // F1-F4
+        float currentPitch;
+        float targetPitch;
+        float correctionAmount;
+        std::chrono::high_resolution_clock::time_point timestamp;
+    };
+    
+    juce::OpenGLContext openGLContext;
+    std::unique_ptr<juce::OpenGLShaderProgram> shaderProgram;
+    juce::OpenGLBuffer vertexBuffer;
+    juce::OpenGLBuffer colorBuffer;
+    
+    // Circular buffers for real-time data
+    CircularBuffer<VisualizationData> dataBuffer{1024};
+    
+    // Visualization settings
+    struct VisualizationSettings {
+        bool showWaveform = true;
+        bool showSpectrum = true;
+        bool showPitchTracking = true;
+        bool showFormants = true;
+        bool show3DSpectrogram = false;
+        float timeScale = 5.0f; // seconds of history
+        float frequencyRange = 8000.0f; // Hz
+        int spectrumResolution = 1024;
+    } settings;
+    
+public:
+    void initialise() override {
+        // Initialize OpenGL shaders
+        createShaders();
+        
+        // Setup vertex buffers
+        setupBuffers();
+        
+        // Start timer for animation
+        startTimerHz(60); // 60 FPS
+    }
+    
+    void render() override {
+        juce::OpenGLHelpers::clear(juce::Colour::fromRGB(20, 20, 20));
+        
+        auto bounds = getLocalBounds().toFloat();
+        auto renderArea = bounds.reduced(10);
+        
+        // Setup OpenGL state
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        // Render different visualization layers
+        if (settings.showWaveform) {
+            renderWaveform(renderArea.removeFromTop(renderArea.getHeight() * 0.3f));
+        }
+        
+        if (settings.showSpectrum) {
+            renderSpectrum(renderArea.removeFromTop(renderArea.getHeight() * 0.4f));
+        }
+        
+        if (settings.showPitchTracking) {
+            renderPitchTracking(renderArea.removeFromTop(renderArea.getHeight() * 0.3f));
+        }
+        
+        if (settings.showFormants) {
+            renderFormants(renderArea);
+        }
+        
+        // Render UI overlays
+        renderGridOverlay();
+        renderParameterValues();
+    }
+    
+    void updateVisualizationData(const VisualizationData& newData) {
+        dataBuffer.write(newData);
+    }
+    
+private:
+    void renderWaveform(juce::Rectangle<float> area) {
+        // Render input and output waveforms with different colors
+        auto waveformData = getRecentWaveformData();
+        
+        // Input waveform (blue)
+        glColor4f(0.3f, 0.7f, 1.0f, 0.8f);
+        renderWaveformPath(waveformData.input, area);
+        
+        // Output waveform (green)
+        glColor4f(0.3f, 1.0f, 0.3f, 0.8f);
+        renderWaveformPath(waveformData.output, area);
+        
+        // Pitch grid overlay
+        renderPitchGrid(area);
+    }
+    
+    void renderSpectrum(juce::Rectangle<float> area) {
+        auto spectrumData = getRecentSpectrumData();
+        
+        // Create gradient colors based on frequency content
+        for (size_t i = 0; i < spectrumData.size(); ++i) {
+            float frequency = (float)i / spectrumData.size() * settings.frequencyRange;
+            float magnitude = spectrumData[i];
+            
+            // Color based on frequency (red=low, yellow=mid, blue=high)
+            auto color = getFrequencyColor(frequency, magnitude);
+            glColor4f(color.getFloatRed(), color.getFloatGreen(), 
+                     color.getFloatBlue(), magnitude);
+            
+            // Draw spectrum bar
+            float x = area.getX() + (float)i / spectrumData.size() * area.getWidth();
+            float height = magnitude * area.getHeight();
+            glBegin(GL_QUADS);
+            glVertex2f(x, area.getBottom());
+            glVertex2f(x + area.getWidth() / spectrumData.size(), area.getBottom());
+            glVertex2f(x + area.getWidth() / spectrumData.size(), area.getBottom() - height);
+            glVertex2f(x, area.getBottom() - height);
+            glEnd();
+        }
+    }
+    
+    void renderPitchTracking(juce::Rectangle<float> area) {
+        auto pitchData = getRecentPitchData();
+        
+        if (pitchData.empty()) return;
+        
+        glLineWidth(2.0f);
+        
+        // Target pitch line (white)
+        glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
+        glBegin(GL_LINE_STRIP);
+        for (size_t i = 0; i < pitchData.size(); ++i) {
+            float x = area.getX() + (float)i / pitchData.size() * area.getWidth();
+            float y = pitchToY(pitchData[i].targetPitch, area);
+            glVertex2f(x, y);
+        }
+        glEnd();
+        
+        // Actual pitch line (yellow)
+        glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+        glBegin(GL_LINE_STRIP);
+        for (size_t i = 0; i < pitchData.size(); ++i) {
+            float x = area.getX() + (float)i / pitchData.size() * area.getWidth();
+            float y = pitchToY(pitchData[i].actualPitch, area);
+            glVertex2f(x, y);
+        }
+        glEnd();
+        
+        // Correction indicators (red when active)
+        for (size_t i = 0; i < pitchData.size(); ++i) {
+            if (pitchData[i].correctionAmount > 0.01f) {
+                glColor4f(1.0f, 0.0f, 0.0f, pitchData[i].correctionAmount);
+                float x = area.getX() + (float)i / pitchData.size() * area.getWidth();
+                float y1 = pitchToY(pitchData[i].actualPitch, area);
+                float y2 = pitchToY(pitchData[i].targetPitch, area);
+                
+                glBegin(GL_LINES);
+                glVertex2f(x, y1);
+                glVertex2f(x, y2);
+                glEnd();
+            }
+        }
+    }
+    
+    juce::Colour getFrequencyColor(float frequency, float magnitude) {
+        // Map frequency to hue (red=low, yellow=mid, blue=high)
+        float hue = juce::jmap(frequency, 0.0f, settings.frequencyRange, 0.0f, 0.7f);
+        float saturation = 0.8f;
+        float brightness = juce::jlimit(0.2f, 1.0f, magnitude * 2.0f);
+        
+        return juce::Colour::fromHSV(hue, saturation, brightness, magnitude);
+    }
+    
+    float pitchToY(float pitch, juce::Rectangle<float> area) {
+        // Convert pitch (Hz) to Y coordinate
+        float minPitch = 80.0f;  // Low E
+        float maxPitch = 1000.0f; // High C
+        float normalizedPitch = (std::log2(pitch / minPitch)) / std::log2(maxPitch / minPitch);
+        return area.getBottom() - normalizedPitch * area.getHeight();
+    }
+};
+```
+
+## 📖 Usage Guide
+
+### Basic Operation Workflow
+
+#### Getting Started Process
+```mermaid
+flowchart TD
+    A[Load HarmonicAI on Vocal Track] --> B[Set Key Signature & Scale]
+    B --> C[Adjust Correction Strength]
+    C --> D[Monitor Real-time Visualization]
+    D --> E[Fine-tune Formant Settings]
+    E --> F[Apply Expression Controls]
+    F --> G[Save Custom Preset]
+    G --> H[Record or Mix]
+    
+    subgraph "🎛️ Quick Setup Options"
+        I[Auto-Detect Key/Scale]
+        J[Load Genre Preset]
+        K[Use AI Recommendations]
+    end
+    
+    B --> I
+    B --> J
+    B --> K
+    
+    style A fill:#e3f2fd
+    style H fill:#e8f5e8
+    style I fill:#fff3e0
+    style J fill:#fff3e0
+    style K fill:#fff3e0
+```
+
+#### Step-by-Step Basic Setup
+
+**1. Initial Plugin Configuration**
+```mermaid
+sequenceDiagram
+    participant User as User
+    participant Plugin as HarmonicAI Plugin
+    participant Server as Cloud Server
+    participant DAW as Digital Audio Workstation
+    
+    User->>Plugin: Insert on vocal track
+    Plugin->>DAW: Request buffer size info
+    DAW-->>Plugin: Buffer size: 512 samples
+    Plugin->>Plugin: Initialize audio engine
+    Plugin->>Server: Establish connection
+    Server-->>Plugin: Connection confirmed
+    Plugin-->>User: Ready for processing
+    
+    Note over User,DAW: Plugin is now ready for use
+```
+
+**2. Audio Setup and Monitoring**
+```bash
+# Recommended DAW settings for optimal performance
+Buffer Size: 128-512 samples (low latency)
+Sample Rate: 44.1kHz or 48kHz
+Bit Depth: 24-bit or 32-bit float
+Monitoring: Direct monitoring via audio interface
+```
+
+**3. Basic Parameter Configuration**
+```yaml
+# Basic setup for pop vocals
+correction:
+  key: "C"
+  scale: "major"
+  strength: 75%
+  speed: "natural"
+  
+character:
+  formant_shift: 0.0
+  age: "adult"
+  gender: "auto-detect"
+  breathiness: 20%
+  
+expression:
+  vibrato_enhancement: true
+  dynamics_processing: "medium"
+  articulation: 50%
+  
+effects:
+  de_esser: "auto"
+  breath_control: "enhance"
+  harmonic_exciter: 25%
+```
+
+### Advanced Parameter Configuration
+
+#### Professional Configuration Workflow
+```mermaid
+graph TD
+    subgraph "🎵 Musical Analysis"
+        A[Key Detection Algorithm] --> B[Scale Analysis]
+        B --> C[Chord Progression Detection]
+        C --> D[Musical Context Understanding]
+    end
+    
+    subgraph "🗣️ Vocal Analysis"
+        E[Voice Type Classification] --> F[Singing Style Detection]
+        F --> G[Emotional Content Analysis]
+        G --> H[Performance Characteristics]
+    end
+    
+    subgraph "⚙️ Automatic Configuration"
+        I[Parameter Recommendations] --> J[Preset Suggestions]
+        J --> K[Real-time Adjustments]
+        K --> L[Learning from User Preferences]
+    end
+    
+    D --> I
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+    
+    style A fill:#e3f2fd
+    style E fill:#fff3e0
+    style I fill:#e8f5e8
+```
+
+#### Advanced Parameter Categories
+
+**1. Pitch Correction Advanced Settings**
+```cpp
+struct PitchCorrectionSettings {
+    // Core correction parameters
+    float correctionStrength = 0.8f;     // 0.0 = off, 1.0 = maximum
+    float correctionSpeed = 0.5f;        // 0.0 = instant, 1.0 = natural
+    float noteTransitionTime = 0.1f;     // seconds
+    
+    // Scale and key settings
+    std::string keySignature = "C";
+    std::string scaleType = "major";
+    std::vector<bool> customScale = {true, false, true, false, true, true, false, true, false, true, false, true};
+    
+    // Advanced pitch detection
+    float pitchDetectionSensitivity = 0.7f;
+    float voicedThreshold = 0.3f;
+    bool enableHarmonicCorrection = true;
+    float harmonicWeight = 0.3f;
+    
+    // Correction behavior
+    enum class CorrectionMode {
+        Automatic,      // AI-driven correction
+        ToScale,        // Force to nearest scale note
+        ToTarget,       // User-specified target notes
+        Chromatic       // Allow all semitones
+    } mode = CorrectionMode::Automatic;
+    
+    // Vibrato handling
+    bool preserveVibrato = true;
+    float vibratoSensitivity = 0.5f;
+    float maxVibratoDeviation = 50.0f; // cents
+    
+    // Performance settings
+    bool enablePredictiveCorrection = true;
+    int lookaheadSamples = 256;
+    bool enableGPUAcceleration = true;
+};
+```
+
+**2. Voice Character Advanced Settings**
+```cpp
+struct VoiceCharacterSettings {
+    // Formant manipulation
+    struct FormantSettings {
+        float f1Shift = 0.0f;      // -2.0 to +2.0 (octaves)
+        float f2Shift = 0.0f;
+        float f3Shift = 0.0f;
+        float f4Shift = 0.0f;
+        float formantScale = 1.0f;  // Overall formant scaling
+        bool preserveFormantRelations = true;
+    } formants;
+    
+    // Voice morphing
+    struct VoiceMorphing {
+        float age = 0.5f;          // 0.0 = child, 1.0 = elderly
+        float gender = 0.5f;       // 0.0 = masculine, 1.0 = feminine
+        float vocalEffort = 0.5f;  // 0.0 = breathy, 1.0 = pressed
+        float nasality = 0.1f;     // 0.0 = normal, 1.0 = nasal
+        float breathiness = 0.2f;  // 0.0 = clear, 1.0 = breathy
+    } morphing;
+    
+    // Texture controls
+    struct VocalTexture {
+        float roughness = 0.0f;    // Vocal fry/roughness
+        float shimmer = 0.0f;      // Amplitude perturbation
+        float jitter = 0.0f;       // Period perturbation
+        float noiseLevel = 0.0f;   // Additive noise
+    } texture;
+    
+    // Advanced voice modeling
+    bool enableNeuralVoiceModel = true;
+    std::string voiceModelPath = "models/voice_character.tflite";
+    float modelInfluence = 0.8f;
+};
+```
+
+**3. Expression Control Advanced Settings**
+```cpp
+struct ExpressionSettings {
+    // Vibrato enhancement
+    struct VibratoControl {
+        bool enhanceExisting = true;
+        float depthMultiplier = 1.0f;
+        float rateMultiplier = 1.0f;
+        float addedDepth = 0.0f;     // cents
+        float addedRate = 0.0f;      // Hz
+        
+        enum class VibratoShape {
+            Sine, Triangle, Sawtooth, Square
+        } shape = VibratoShape::Sine;
+        
+        bool syncToTempo = false;
+        float tempoSyncRatio = 1.0f; // 1/4 note, 1/8 note, etc.
+    } vibrato;
+    
+    // Dynamics processing
+    struct DynamicsProcessing {
+        bool enableCompression = true;
+        float compressionRatio = 3.0f;
+        float threshold = -18.0f;      // dB
+        float attack = 10.0f;          // ms
+        float release = 100.0f;        // ms
+        float makeupGain = 0.0f;       // dB
+        
+        bool enableExpansion = false;
+        float expansionRatio = 2.0f;
+        float expansionThreshold = -40.0f; // dB
+    } dynamics;
+    
+    // Articulation enhancement
+    struct ArticulationControl {
+        float consonantClarity = 0.5f;
+        float vowelDefinition = 0.5f;
+        float transientEnhancement = 0.3f;
+        bool preserveMicroTiming = true;
+        
+        enum class ArticulationMode {
+            Natural,        // Preserve original
+            Enhanced,       // Improve clarity
+            Exaggerated    // Maximum definition
+        } mode = ArticulationMode::Enhanced;
+    } articulation;
+    
+    // Timing correction
+    struct TimingCorrection {
+        bool enableQuantization = false;
+        float quantizeStrength = 0.5f;
+        enum class QuantizeGrid {
+            Sixteenth, Eighth, Quarter, Half, Whole
+        } grid = QuantizeGrid::Sixteenth;
+        
+        bool enableSwingCorrection = false;
+        float swingAmount = 0.0f;      // 0.0 = straight, 1.0 = triplet swing
+        
+        bool preserveRhythmicExpression = true;
+        float expressionThreshold = 0.1f; // Timing deviation threshold
+    } timing;
+};
+```
+
+### Preset Management System
+
+#### Comprehensive Preset Architecture
+```mermaid
+graph TB
+    subgraph "📁 Preset Categories"
+        A[Factory Presets<br/>Genre-specific]
+        B[User Presets<br/>Custom settings]
+        C[Project Presets<br/>Session-specific]
+        D[Artist Presets<br/>Signature sounds]
+    end
+    
+    subgraph "🏷️ Preset Organization"
+        E[Tags System<br/>Pop, Rock, Classical, etc.]
+        F[Rating System<br/>5-star user ratings]
+        G[Usage Statistics<br/>Most used presets]
+        H[Search & Filter<br/>Advanced queries]
+    end
+    
+    subgraph "🔄 Preset Features"
+        I[A/B Comparison<br/>Side-by-side testing]
+        J[Preset Morphing<br/>Blend between presets]
+        K[Parameter Locking<br/>Selective loading]
+        L[Version Control<br/>Preset history]
+    end
+    
+    A --> E
+    B --> F
+    C --> G
+    D --> H
+    E --> I
+    F --> J
+    G --> K
+    H --> L
+    
+    style A fill:#e3f2fd
+    style I fill:#fff3e0
+    style E fill:#f3e5f5
+```
+
+#### Preset Management Implementation
+```cpp
+class PresetManager {
+public:
+    struct PresetMetadata {
+        std::string name;
+        std::string description;
+        std::string author;
+        std::string genre;
+        std::vector<std::string> tags;
+        float rating = 0.0f;
+        int usageCount = 0;
+        std::chrono::system_clock::time_point created;
+        std::chrono::system_clock::time_point lastUsed;
+        std::string version = "1.0";
+    };
+    
+    struct Preset {
+        PresetMetadata metadata;
+        PitchCorrectionSettings pitchSettings;
+        VoiceCharacterSettings characterSettings;
+        ExpressionSettings expressionSettings;
+        EffectsSettings effectsSettings;
+        
+        // Serialization
+        nlohmann::json toJson() const {
+            nlohmann::json j;
+            j["metadata"] = metadata;
+            j["pitch"] = pitchSettings;
+            j["character"] = characterSettings;
+            j["expression"] = expressionSettings;
+            j["effects"] = effectsSettings;
+            return j;
+        }
+        
+        void fromJson(const nlohmann::json& j) {
+            metadata = j["metadata"];
+            pitchSettings = j["pitch"];
+            characterSettings = j["character"];
+            expressionSettings = j["expression"];
+            effectsSettings = j["effects"];
+        }
+    };
+    
+private:
+    std::vector<Preset> factoryPresets;
+    std::vector<Preset> userPresets;
+    Preset currentPreset;
+    Preset comparePreset; // For A/B comparison
+    
+    // Preset database
+    SQLite::Database presetDatabase;
+    
+public:
+    // Preset loading and saving
+    bool loadPreset(const std::string& presetName) {
+        auto preset = findPreset(presetName);
+        if (preset) {
+            currentPreset = *preset;
+            applyPresetToEngine(currentPreset);
+            updateUsageStatistics(presetName);
+            return true;
+        }
+        return false;
+    }
+    
+    bool savePreset(const std::string& name, const PresetMetadata& metadata) {
+        Preset newPreset;
+        newPreset.metadata = metadata;
+        newPreset.metadata.name = name;
+        newPreset.metadata.created = std::chrono::system_clock::now();
+        
+        // Capture current engine settings
+        captureCurrentSettings(newPreset);
+        
+        // Save to database
+        savePresetToDatabase(newPreset);
+        
+        userPresets.push_back(newPreset);
+        return true;
+    }
+    
+    // A/B comparison
+    void setComparePreset(const std::string& presetName) {
+        auto preset = findPreset(presetName);
+        if (preset) {
+            comparePreset = *preset;
+        }
+    }
+    
+    void switchToCompare() {
+        std::swap(currentPreset, comparePreset);
+        applyPresetToEngine(currentPreset);
+    }
+    
+    // Preset morphing
+    Preset morphPresets(const Preset& presetA, const Preset& presetB, float morphFactor) {
+        Preset morphedPreset;
+        
+        // Interpolate between parameter values
+        morphedPreset.pitchSettings.correctionStrength = 
+            juce::jmap(morphFactor, 
+                      presetA.pitchSettings.correctionStrength,
+                      presetB.pitchSettings.correctionStrength);
+                      
+        morphedPreset.characterSettings.morphing.age =
+            juce::jmap(morphFactor,
+                      presetA.characterSettings.morphing.age,
+                      presetB.characterSettings.morphing.age);
+        
+        // ... interpolate all other parameters
+        
+        return morphedPreset;
+    }
+    
+    // Search and filtering
+    std::vector<Preset> searchPresets(const std::string& query, 
+                                     const std::vector<std::string>& tags = {},
+                                     float minRating = 0.0f) {
+        std::vector<Preset> results;
+        
+        auto allPresets = getAllPresets();
+        for (const auto& preset : allPresets) {
+            bool matches = true;
+            
+            // Text search in name and description
+            if (!query.empty()) {
+                std::string searchText = preset.metadata.name + " " + preset.metadata.description;
+                std::transform(searchText.begin(), searchText.end(), searchText.begin(), ::tolower);
+                std::string lowerQuery = query;
+                std::transform(lowerQuery.begin(), lowerQuery.end(), lowerQuery.begin(), ::tolower);
+                
+                if (searchText.find(lowerQuery) == std::string::npos) {
+                    matches = false;
+                }
+            }
+            
+            // Tag filtering
+            if (!tags.empty()) {
+                bool hasTag = false;
+                for (const auto& tag : tags) {
+                    if (std::find(preset.metadata.tags.begin(), 
+                                 preset.metadata.tags.end(), tag) != preset.metadata.tags.end()) {
+                        hasTag = true;
+                        break;
+                    }
+                }
+                if (!hasTag) matches = false;
+            }
+            
+            // Rating filtering
+            if (preset.metadata.rating < minRating) {
+                matches = false;
+            }
+            
+            if (matches) {
+                results.push_back(preset);
+            }
+        }
+        
+        // Sort by relevance (usage count + rating)
+        std::sort(results.begin(), results.end(), 
+                 [](const Preset& a, const Preset& b) {
+                     float scoreA = a.metadata.rating + (a.metadata.usageCount * 0.1f);
+                     float scoreB = b.metadata.rating + (b.metadata.usageCount * 0.1f);
+                     return scoreA > scoreB;
+                 });
+        
+        return results;
+    }
+    
+private:
+    void initializeFactoryPresets() {
+        // Pop Vocal Preset
+        Preset popPreset;
+        popPreset.metadata.name = "Modern Pop Vocal";
+        popPreset.metadata.description = "Bright, clear vocal sound perfect for contemporary pop music";
+        popPreset.metadata.genre = "Pop";
+        popPreset.metadata.tags = {"pop", "bright", "clear", "modern"};
+        popPreset.pitchSettings.correctionStrength = 0.85f;
+        popPreset.characterSettings.formants.f1Shift = 0.1f;
+        popPreset.effectsSettings.deEsser.enabled = true;
+        factoryPresets.push_back(popPreset);
+        
+        // Rock Vocal Preset
+        Preset rockPreset;
+        rockPreset.metadata.name = "Rock Vocal Power";
+        rockPreset.metadata.description = "Powerful, aggressive vocal tone for rock and metal";
+        rockPreset.metadata.genre = "Rock";
+        rockPreset.metadata.tags = {"rock", "metal", "powerful", "aggressive"};
+        rockPreset.pitchSettings.correctionStrength = 0.6f;
+        rockPreset.characterSettings.texture.roughness = 0.3f;
+        rockPreset.expressionSettings.dynamics.compressionRatio = 4.0f;
+        factoryPresets.push_back(rockPreset);
+        
+        // ... more factory presets
+    }
+};
+```
+
+### DAW Integration Guides
+
+#### Comprehensive DAW Support Matrix
+```mermaid
+graph TB
+    subgraph "🎛️ Professional DAWs"
+        A[Pro Tools<br/>2020.3+] --> A1[VST3 Support<br/>AAX Native]
+        B[Logic Pro X<br/>10.5+] --> B1[Audio Unit<br/>Native Integration]
+        C[Cubase/Nuendo<br/>11+] --> C1[VST3 Host<br/>Advanced Features]
+    end
+    
+    subgraph "🎵 Creative DAWs"
+        D[Ableton Live<br/>11+] --> D1[VST3/AU<br/>Max for Live]
+        E[FL Studio<br/>20+] --> E1[VST3 Wrapper<br/>Lifetime Updates]
+        F[Studio One<br/>5+] --> F1[VST3 Native<br/>Drag & Drop]
+    end
+    
+    subgraph "🔧 Specialized DAWs"
+        G[Reaper<br/>6.0+] --> G1[VST3/AU<br/>Custom Scripts]
+        H[Digital Performer<br/>11+] --> H1[Audio Unit<br/>MAS Plugin]
+        I[Reason<br/>12+] --> I1[Rack Extension<br/>VST3 Support]
+    end
+    
+    subgraph "🔄 Integration Features"
+        J[Delay Compensation<br/>Automatic PDC]
+        K[Automation Support<br/>Full Parameter Control]
+        L[Preset Integration<br/>DAW Preset Browser]
+        M[Side-chain Support<br/>External Key Input]
+    end
+    
+    A1 --> J
+    B1 --> K
+    C1 --> L
+    D1 --> M
+    
+    style A fill:#e3f2fd
+    style D fill:#fff3e0
+    style G fill:#f3e5f5
+    style J fill:#e8f5e8
+```
+
+#### Ableton Live Integration
+
+**Setup and Configuration**
+```python
+# Ableton Live Control Surface Script for HarmonicAI
+# Located in: /Applications/Ableton Live 11/Contents/App-Resources/MIDI Remote Scripts/HarmonicAI/
+
+class HarmonicAIControlSurface(ControlSurface):
+    def __init__(self, c_instance):
+        super().__init__(c_instance)
+        
+        # Define MIDI mappings for key parameters
+        self.parameter_mappings = {
+            # Correction controls
+            0x10: 'correction_strength',    # CC 16
+            0x11: 'correction_speed',       # CC 17
+            0x12: 'key_signature',          # CC 18
+            
+            # Character controls  
+            0x20: 'formant_shift',          # CC 32
+            0x21: 'voice_age',              # CC 33
+            0x22: 'breathiness',            # CC 34
+            
+            # Expression controls
+            0x30: 'vibrato_depth',          # CC 48
+            0x31: 'vibrato_rate',           # CC 49
+            0x32: 'dynamics_amount',        # CC 50
+        }
+        
+        # Setup Live API integration
+        self.setup_live_integration()
+        
+    def setup_live_integration(self):
+        # Monitor selected track for HarmonicAI plugin
+        self.song().view.add_selected_track_listener(self.on_track_selected)
+        
+        # Setup tempo sync for vibrato
+        self.song().add_tempo_listener(self.on_tempo_changed)
+        
+        # Monitor transport for timing correction
+        self.song().add_is_playing_listener(self.on_transport_changed)
+    
+    def on_track_selected(self):
+        # Find HarmonicAI plugin on selected track
+        track = self.song().view.selected_track
+        
+        for device in track.devices:
+            if device.name == "HarmonicAI":
+                self.harmonicai_device = device
+                self.setup_parameter_listeners()
+                break
+    
+    def setup_parameter_listeners(self):
+        # Map Ableton's parameter automation to HarmonicAI
+        for param in self.harmonicai_device.parameters:
+            param.add_value_listener(lambda: self.on_parameter_changed(param))
+    
+    def receive_midi(self, midi_bytes):
+        # Handle MIDI CC for real-time control
+        if len(midi_bytes) == 3 and midi_bytes[0] == 176:  # Control Change
+            cc_number = midi_bytes[1]
+            cc_value = midi_bytes[2]
+            
+            if cc_number in self.parameter_mappings:
+                param_name = self.parameter_mappings[cc_number]
+                normalized_value = cc_value / 127.0
+                self.set_harmonicai_parameter(param_name, normalized_value)
+```
+
+**Live Performance Setup**
+```yaml
+# Ableton Live Set Template for HarmonicAI
+tracks:
+  - name: "Lead Vocal"
+    devices:
+      - HarmonicAI:
+          preset: "Live Performance"
+          parameters:
+            correction_strength: 85%
+            latency_mode: "ultra_low"
+            monitoring: "direct"
+      - Compressor:
+          ratio: 3:1
+          attack: 1ms
+          release: 100ms
+      - EQ Eight:
+          high_shelf: +2dB @ 8kHz
+          
+  - name: "Vocal Harmony"
+    devices:
+      - HarmonicAI:
+          preset: "Harmony Generator"
+          parameters:
+            harmony_voices: ["soprano", "alto"]
+            harmony_key: "auto_detect"
+            
+automation:
+  - track: "Lead Vocal"
+    parameter: "HarmonicAI.correction_strength"
+    curve: [0.6, 0.85, 0.9, 0.7]  # Verse, Chorus, Bridge, Outro
+```
+
+#### Pro Tools Integration
+
+**AAX Plugin Configuration**
+```cpp
+// ProTools AAX wrapper for HarmonicAI
+class HarmonicAI_AAX : public AAX_CEffectGUI {
+private:
+    std::unique_ptr<VocalTransformAudioProcessor> processor;
+    
+public:
+    AAX_Result EffectInit() override {
+        // Initialize HarmonicAI processor
+        processor = std::make_unique<VocalTransformAudioProcessor>();
+        
+        // Setup Pro Tools specific features
+        setupDelayCompensation();
+        setupAutomationSupport();
+        setupSideChainInput();
+        
+        return AAX_SUCCESS;
+    }
+    
+    void setupDelayCompensation() {
+        // Calculate plugin delay for PDC
+        auto latency = processor->getLatencySamples();
+        
+        // Report delay to Pro Tools
+        AAX_IComponentDescriptor* descriptor = GetDescriptor();
+        descriptor->AddMIDINode(
+            AAX_eMIDINodeType_LocalInput,
+            AAX_eMIDINodeType_LocalOutput,
+            "HarmonicAI",
+            latency
+        );
+    }
+    
+    void setupAutomationSupport() {
+        // Register automatable parameters
+        auto& parameters = processor->getParameters();
+        
+        for (int i = 0; i < parameters.size(); ++i) {
+            auto param = parameters.getUnchecked(i);
+            
+            AddParameter(
+                param->parameterID.toStdString().c_str(),
+                param->name.toStdString().c_str(),
+                param->getDefaultValue(),
+                param
+            );
+        }
+    }
+    
+    AAX_Result GenerateCoefficients() override {
+        // Real-time parameter updates from Pro Tools automation
+        auto correctionStrength = *GetParameter("correction_strength");
+        auto keySignature = *GetParameter("key_signature");
+        auto formantShift = *GetParameter("formant_shift");
+        
+        // Apply to processor
+        processor->setParameterNotifyingHost("correction_strength", correctionStrength);
+        processor->setParameterNotifyingHost("key_signature", keySignature);
+        processor->setParameterNotifyingHost("formant_shift", formantShift);
+        
+        return AAX_SUCCESS;
+    }
+    
+    void ProcessAudio(
+        AAX_SIoModuleInfo* const ioModuleInfo,
+        AAX_SInstrumentRenderInfo* const renderInfo) override {
+        
+        // Get audio buffers from Pro Tools
+        const int numSamples = renderInfo->mNumSamples;
+        const int numChannels = ioModuleInfo->GetNumberOfChannels();
+        
+        // Convert to JUCE AudioBuffer
+        juce::AudioBuffer<float> buffer(numChannels, numSamples);
+        
+        for (int ch = 0; ch < numChannels; ++ch) {
+            float* channelData = static_cast<float*>(ioModuleInfo->GetChannelPtr(ch));
+            buffer.copyFrom(ch, 0, channelData, numSamples);
+        }
+        
+        // Process with HarmonicAI
+        processor->processBlock(buffer, juce::MidiBuffer());
+        
+        // Copy back to Pro Tools buffers
+        for (int ch = 0; ch < numChannels; ++ch) {
+            float* channelData = static_cast<float*>(ioModuleInfo->GetChannelPtr(ch));
+            buffer.copyTo(ch, 0, channelData, numSamples);
+        }
+    }
+};
+```
+
+**Pro Tools Session Template**
+```xml
+<!-- Pro Tools Session Template for HarmonicAI -->
+<ProToolsSession version="2021.3">
+    <AudioTracks>
+        <Track name="Lead Vocal" type="mono">
+            <Inserts>
+                <Insert slot="1">
+                    <Plugin name="HarmonicAI" manufacturer="Tim Spurlin">
+                        <Preset>Broadcast Ready</Preset>
+                        <Parameters>
+                            <CorrectionStrength>75</CorrectionStrength>
+                            <KeySignature>C</KeySignature>
+                            <LatencyMode>Low</LatencyMode>
+                        </Parameters>
+                    </Plugin>
+                </Insert>
+                <Insert slot="2">
+                    <Plugin name="EQ III" manufacturer="Avid">
+                        <HighShelf frequency="8000" gain="2.0"/>
+                        <LowCut frequency="80"/>
+                    </Plugin>
+                </Insert>
+            </Inserts>
+            <Sends>
+                <Send destination="Vocal Reverb" level="-12dB"/>
+            </Sends>
+        </Track>
+        
+        <Track name="Vocal Double" type="mono">
+            <Inserts>
+                <Insert slot="1">
+                    <Plugin name="HarmonicAI">
+                        <Preset>Vocal Double</Preset>
+                        <Parameters>
+                            <CorrectionStrength>60</CorrectionStrength>
+                            <FormantShift>0.05</FormantShift>
+                            <TimingOffset>10ms</TimingOffset>
+                        </Parameters>
+                    </Plugin>
+                </Insert>
+            </Inserts>
+        </Track>
+    </AudioTracks>
+    
+    <Automation>
+        <Track name="Lead Vocal">
+            <Parameter name="HarmonicAI.CorrectionStrength">
+                <Point time="0:00" value="60"/>
+                <Point time="0:32" value="85"/>  <!-- Chorus -->
+                <Point time="1:04" value="60"/>  <!-- Verse 2 -->
+                <Point time="1:36" value="90"/>  <!-- Bridge -->
+            </Parameter>
+        </Track>
+    </Automation>
+</ProToolsSession>
+```
+
+#### Logic Pro X Integration
+
+**Audio Unit Implementation**
+```cpp
+// Audio Unit wrapper for Logic Pro X
+class HarmonicAI_AU : public AUEffectBase {
+private:
+    std::unique_ptr<VocalTransformAudioProcessor> processor;
+    
+public:
+    HarmonicAI_AU(AudioUnit component) : AUEffectBase(component) {
+        processor = std::make_unique<VocalTransformAudioProcessor>();
+        
+        // Setup Logic-specific features
+        setupChannelConfigurations();
+        setupParameterInfo();
+        setupFactoryPresets();
+    }
+    
+    void setupChannelConfigurations() {
+        // Define supported channel configurations
+        CAStreamBasicDescription stereoFormat;
+        stereoFormat.SetCanonical(2, false);  // 2 channels, non-interleaved
+        
+        CAStreamBasicDescription monoFormat;
+        monoFormat.SetCanonical(1, false);   // 1 channel
+        
+        AddChannelConfiguration(1, 1);  // Mono in, Mono out
+        AddChannelConfiguration(1, 2);  // Mono in, Stereo out (for harmony)
+        AddChannelConfiguration(2, 2);  // Stereo in, Stereo out
+    }
+    
+    void setupParameterInfo() {
+        // Define AU parameter structure
+        SetParameter(kParam_CorrectionStrength, kAudioUnitScope_Global, 
+                    0, 0.8f, false);
+        SetParameter(kParam_KeySignature, kAudioUnitScope_Global,
+                    0, 0.0f, false);  // C = 0, C# = 1, etc.
+        SetParameter(kParam_FormantShift, kAudioUnitScope_Global,
+                    0, 0.0f, false);
+        
+        // Parameter info for Logic's interface
+        CFStringRef paramNames[] = {
+            CFSTR("Correction Strength"),
+            CFSTR("Key Signature"),
+            CFSTR("Formant Shift")
+        };
+        
+        for (int i = 0; i < 3; ++i) {
+            AudioUnitParameterInfo paramInfo;
+            paramInfo.name = paramNames[i];
+            paramInfo.unitName = kAudioUnitParameterUnit_Percent;
+            paramInfo.minValue = 0.0f;
+            paramInfo.maxValue = 100.0f;
+            paramInfo.defaultValue = 50.0f;
+            paramInfo.flags = kAudioUnitParameterFlag_IsWritable |
+                             kAudioUnitParameterFlag_IsReadable |
+                             kAudioUnitParameterFlag_HasCFNameString;
+        }
+    }
+    
+    ComponentResult Render(AudioUnitRenderActionFlags& ioActionFlags,
+                          const AudioTimeStamp& inTimeStamp,
+                          UInt32 inNumberFrames) override {
+        
+        // Get input audio
+        AudioBufferList* input = GetInputBuffer();
+        AudioBufferList* output = GetOutputBuffer();
+        
+        // Convert to JUCE format
+        juce::AudioBuffer<float> buffer;
+        convertAudioBufferListToJUCE(input, buffer, inNumberFrames);
+        
+        // Process with HarmonicAI
+        juce::MidiBuffer midiBuffer;
+        processor->processBlock(buffer, midiBuffer);
+        
+        // Convert back to Core Audio format
+        convertJUCEToAudioBufferList(buffer, output, inNumberFrames);
+        
+        return noErr;
+    }
+    
+    // Logic Pro X preset support
+    ComponentResult GetPresets(CFArrayRef* outData) const override {
+        CFMutableArrayRef presets = CFArrayCreateMutable(NULL, 0, &kCFTypeArrayCallBacks);
+        
+        // Add factory presets
+        addPreset(presets, 0, CFSTR("Pop Vocal"));
+        addPreset(presets, 1, CFSTR("Rock Vocal"));
+        addPreset(presets, 2, CFSTR("Classical Vocal"));
+        addPreset(presets, 3, CFSTR("Broadcast Voice"));
+        
+        *outData = presets;
+        return noErr;
+    }
+    
+    ComponentResult NewFactoryPresetSet(const AUPreset& inNewFactoryPreset) override {
+        switch (inNewFactoryPreset.presetNumber) {
+            case 0: // Pop Vocal
+                SetParameter(kParam_CorrectionStrength, kAudioUnitScope_Global, 0, 85.0f, false);
+                SetParameter(kParam_KeySignature, kAudioUnitScope_Global, 0, 0.0f, false);
+                SetParameter(kParam_FormantShift, kAudioUnitScope_Global, 0, 5.0f, false);
+                break;
+                
+            case 1: // Rock Vocal
+                SetParameter(kParam_CorrectionStrength, kAudioUnitScope_Global, 0, 60.0f, false);
+                SetParameter(kParam_FormantShift, kAudioUnitScope_Global, 0, -10.0f, false);
+                break;
+                
+            // ... more presets
+        }
+        
+        return noErr;
+    }
+};
+```
+
+## ⚡ Performance Optimization
+
+### Resource Management
+
+#### System Resource Monitoring
+```mermaid
+graph TB
+    subgraph "💻 CPU Management"
+        A[Thread Pool Manager] --> B[Core Allocation Strategy]
+        B --> C[Load Balancing Algorithm]
+        C --> D[Priority-based Scheduling]
+        D --> E[Real-time Thread Priority]
+    end
+    
+    subgraph "🧠 Memory Management"
+        F[Memory Pool Allocator] --> G[Buffer Recycling System]
+        G --> H[Cache-friendly Data Layout]
+        H --> I[NUMA-aware Allocation]
+        I --> J[Memory Leak Detection]
+    end
+    
+    subgraph "🖥️ GPU Acceleration"
+        K[CUDA/OpenCL Context] --> L[Model Loading Strategy]
+        L --> M[Batch Processing Optimization]
+        M --> N[Memory Transfer Minimization]
+        N --> O[GPU-CPU Synchronization]
+    end
+    
+    subgraph "⚡ Performance Monitoring"
+        P[Real-time Metrics Collection] --> Q[Adaptive Quality Scaling]
+        Q --> R[Bottleneck Detection]
+        R --> S[Resource Usage Prediction]
+        S --> T[Performance Alerts]
+    end
+    
+    A --> F
+    F --> K
+    K --> P
+    
+    style A fill:#e3f2fd
+    style F fill:#fff3e0
+    style K fill:#f3e5f5
+    style P fill:#e8f5e8
+```
+
+#### Advanced Resource Management Implementation
+```cpp
+class ResourceManager {
+private:
+    // CPU resource management
+    struct CPUResources {
+        std::unique_ptr<ThreadPool> audioThreadPool;
+        std::unique_ptr<ThreadPool> analysisThreadPool;
+        std::unique_ptr<ThreadPool> networkThreadPool;
+        
+        int numAudioThreads = 2;
+        int numAnalysisThreads = 4;
+        int numNetworkThreads = 2;
+        
+        // NUMA topology awareness
+        std::vector<int> preferredCPUCores;
+        bool enableNUMAOptimization = true;
+    } cpuResources;
+    
+    // Memory resource management
+    struct MemoryResources {
+        std::unique_ptr<MemoryPool> audioBufferPool;
+        std::unique_ptr<MemoryPool> spectralDataPool;
+        std::unique_ptr<MemoryPool> neuralNetworkPool;
+        
+        size_t maxMemoryUsage = 512 * 1024 * 1024; // 512MB default
+        size_t currentMemoryUsage = 0;
+        
+        // Cache management
+        LRUCache<std::string, ProcessedAudio> processedAudioCache{100};
+        LRUCache<std::string, SpectralFeatures> spectralCache{50};
+    } memoryResources;
+    
+    // GPU resource management
+    struct GPUResources {
+        bool gpuAccelerationEnabled = true;
+        int selectedGPUDevice = 0;
+        size_t maxVRAMUsage = 1024 * 1024 * 1024; // 1GB default
+        size_t currentVRAMUsage = 0;
+        
+        // Model management
+        std::unordered_map<std::string, std::unique_ptr<TensorFlowModel>> loadedModels;
+        ModelLoadingStrategy loadingStrategy = ModelLoadingStrategy::OnDemand;
+        
+        // Performance settings
+        bool enableMixedPrecision = true;
+        bool enableTensorRT = true;
+        int maxBatchSize = 4;
+    } gpuResources;
+    
+public:
+    void initializeResources(const SystemConfiguration& config) {
+        initializeCPUResources(config);
+        initializeMemoryResources(config);
+        initializeGPUResources(config);
+        
+        // Start performance monitoring
+        startPerformanceMonitoring();
+    }
+    
+    void initializeCPUResources(const SystemConfiguration& config) {
+        // Detect system topology
+        auto topology = detectSystemTopology();
+        
+        // Optimize thread allocation based on available cores
+        int availableCores = std::thread::hardware_concurrency();
+        
+        if (config.performanceMode == PerformanceMode::UltraLow) {
+            // Minimize CPU usage for real-time performance
+            cpuResources.numAudioThreads = 1;
+            cpuResources.numAnalysisThreads = 1;
+            cpuResources.numNetworkThreads = 1;
+        } else if (config.performanceMode == PerformanceMode::Balanced) {
+            // Balanced resource allocation
+            cpuResources.numAudioThreads = std::min(2, availableCores / 4);
+            cpuResources.numAnalysisThreads = std::min(4, availableCores / 2);
+            cpuResources.numNetworkThreads = 2;
+        } else { // HighQuality
+            // Maximum performance allocation
+            cpuResources.numAudioThreads = std::min(4, availableCores / 3);
+            cpuResources.numAnalysisThreads = std::min(8, availableCores - 2);
+            cpuResources.numNetworkThreads = 2;
+        }
+        
+        // Create thread pools with optimized settings
+        cpuResources.audioThreadPool = std::make_unique<ThreadPool>(
+            cpuResources.numAudioThreads,
+            ThreadPriority::RealTime,
+            CPUAffinity::AudioCores
+        );
+        
+        cpuResources.analysisThreadPool = std::make_unique<ThreadPool>(
+            cpuResources.numAnalysisThreads,
+            ThreadPriority::High,
+            CPUAffinity::AnalysisCores
+        );
+        
+        cpuResources.networkThreadPool = std::make_unique<ThreadPool>(
+            cpuResources.numNetworkThreads,
+            ThreadPriority::Normal,
+            CPUAffinity::NetworkCores
+        );
+    }
+    
+    void initializeMemoryResources(const SystemConfiguration& config) {
+        // Calculate memory allocation based on available RAM
+        auto availableRAM = getAvailableSystemRAM();
+        
+        // Adaptive memory allocation (10-25% of available RAM)
+        float memoryUsageRatio = config.memoryUsageLevel;
+        memoryResources.maxMemoryUsage = static_cast<size_t>(
+            availableRAM * memoryUsageRatio);
+        
+        // Create memory pools with different allocation strategies
+        memoryResources.audioBufferPool = std::make_unique<MemoryPool>(
+            "AudioBuffers",
+            1024 * 1024,  // 1MB chunks
+            64,           // 64-byte alignment for SIMD
+            MemoryType::FastAccess
+        );
+        
+        memoryResources.spectralDataPool = std::make_unique<MemoryPool>(
+            "SpectralData", 
+            2 * 1024 * 1024,  // 2MB chunks
+            32,               // 32-byte alignment
+            MemoryType::CacheFriendly
+        );
+        
+        memoryResources.neuralNetworkPool = std::make_unique<MemoryPool>(
+            "NeuralNetwork",
+            16 * 1024 * 1024, // 16MB chunks
+            256,              // 256-byte alignment for GPU transfers
+            MemoryType::GPUShared
+        );
+        
+        // Setup caches with appropriate sizes
+        size_t cacheMemory = memoryResources.maxMemoryUsage / 4; // 25% for caching
+        memoryResources.processedAudioCache.setMaxMemoryUsage(cacheMemory / 2);
+        memoryResources.spectralCache.setMaxMemoryUsage(cacheMemory / 2);
+    }
+    
+    void initializeGPUResources(const SystemConfiguration& config) {
+        if (!config.enableGPUAcceleration) {
+            gpuResources.gpuAccelerationEnabled = false;
+            return;
+        }
+        
+        // Detect available GPUs
+        auto availableGPUs = detectAvailableGPUs();
+        
+        if (availableGPUs.empty()) {
+            logger.warning("No compatible GPUs found, disabling GPU acceleration");
+            gpuResources.gpuAccelerationEnabled = false;
+            return;
+        }
+        
+        // Select best GPU based on performance and memory
+        gpuResources.selectedGPUDevice = selectOptimalGPU(availableGPUs);
+        
+        // Initialize GPU context
+        initializeGPUContext(gpuResources.selectedGPUDevice);
+        
+        // Load neural network models
+        loadNeuralNetworkModels(config.modelLoadingStrategy);
+        
+        // Setup GPU memory management
+        auto gpuMemoryInfo = getGPUMemoryInfo(gpuResources.selectedGPUDevice);
+        gpuResources.maxVRAMUsage = static_cast<size_t>(
+            gpuMemoryInfo.totalMemory * config.gpuMemoryUsageRatio);
+    }
+    
+    // Adaptive performance scaling
+    void adaptPerformanceToLoad() {
+        auto currentLoad = getCurrentSystemLoad();
+        
+        if (currentLoad.cpuUsage > 90.0f) {
+            // Reduce quality to maintain real-time performance
+            reduceProcessingQuality();
+        } else if (currentLoad.cpuUsage < 50.0f && currentLoad.memoryUsage < 70.0f) {
+            // Increase quality if resources are available
+            increaseProcessingQuality();
+        }
+        
+        // GPU load balancing
+        if (gpuResources.gpuAccelerationEnabled && currentLoad.gpuUsage > 95.0f) {
+            // Offload some processing back to CPU
+            rebalanceGPULoad();
+        }
+    }
+    
+    // Real-time performance monitoring
+    struct PerformanceMetrics {
+        float cpuUsage = 0.0f;
+        float memoryUsage = 0.0f;
+        float gpuUsage = 0.0f;
+        float audioLatency = 0.0f;
+        int droppedSamples = 0;
+        float processingLoad = 0.0f;
+        std::chrono::microseconds lastUpdateTime;
+    };
+    
+    PerformanceMetrics getPerformanceMetrics() const {
+        PerformanceMetrics metrics;
+        
+        // CPU metrics
+        metrics.cpuUsage = getCPUUsagePercent();
+        
+        // Memory metrics
+        metrics.memoryUsage = (float)memoryResources.currentMemoryUsage / 
+                             memoryResources.maxMemoryUsage * 100.0f;
+        
+        // GPU metrics
+        if (gpuResources.gpuAccelerationEnabled) {
+            metrics.gpuUsage = getGPUUsagePercent();
+        }
+        
+        // Audio performance metrics
+        metrics.audioLatency = getAudioLatencyMs();
+        metrics.droppedSamples = getDroppedSampleCount();
+        metrics.processingLoad = getProcessingLoadPercent();
+        
+        metrics.lastUpdateTime = std::chrono::high_resolution_clock::now();
+        
+        return metrics;
+    }
+};
+```
+
+### Processing Modes
+
+#### Adaptive Quality System
+```mermaid
+flowchart TD
+    subgraph "🎯 Performance Modes"
+        A[Ultra Low Latency<br/>≤ 3ms] --> A1[Simplified NN Models<br/>Reduced Analysis Depth]
+        B[Low Latency<br/>≤ 5ms] --> B1[Optimized NN Models<br/>Balanced Quality/Speed]
+        C[Balanced<br/>≤ 10ms] --> C1[Full NN Models<br/>Standard Quality]
+        D[High Quality<br/>≤ 20ms] --> D1[Enhanced NN Models<br/>Maximum Quality]
+    end
+    
+    subgraph "⚙️ Adaptive Parameters"
+        E[Buffer Size<br/>32-2048 samples]
+        F[Analysis Window<br/>512-8192 points]
+        G[Neural Model Size<br/>Lite/Standard/Pro]
+        H[Oversampling Rate<br/>1x-8x]
+    end
+    
+    subgraph "📊 Quality Metrics"
+        I[Pitch Accuracy<br/>±0.01-0.1 semitones]
+        J[Formant Preservation<br/>95-99% accuracy]
+        K[Artifact Level<br/>< 0.01-0.1%]
+        L[Processing Load<br/>5-50% CPU]
+    end
+    
+    A1 --> E
+    B1 --> F
+    C1 --> G
+    D1 --> H
+    E --> I
+    F --> J
+    G --> K
+    H --> L
+    
+    style A fill:#ffcdd2
+    style B fill:#fff3e0
+    style C fill:#e8f5e8
+    style D fill:#e3f2fd
+```
+
+#### Dynamic Quality Scaling Implementation
+```cpp
+class AdaptiveQualityManager {
+public:
+    enum class QualityMode {
+        UltraLowLatency,  // Real-time monitoring, minimal processing
+        LowLatency,       // Live performance, optimized processing
+        Balanced,         // Studio recording, balanced quality/performance
+        HighQuality,      // Mixing/mastering, maximum quality
+        Custom           // User-defined parameters
+    };
+    
+    struct QualityParameters {
+        // Neural network settings
+        std::string pitchModelPath;
+        std::string formantModelPath;
+        std::string characterModelPath;
+        
+        // Processing parameters
+        int analysisWindowSize;
+        int hopSize;
+        int fftSize;
+        float oversamplingRate;
+        
+        // Quality vs performance trade-offs
+        float pitchAccuracyTarget;     // semitones
+        float formantAccuracyTarget;   // percentage
+        float maxArtifactLevel;        // percentage
+        float maxCPUUsage;            // percentage
+        float maxLatency;             // milliseconds
+        
+        // Advanced settings
+        bool enableHarmonicAnalysis;
+        bool enableFormantTracking;
+        bool enableVoiceCharacterization;
+        bool enableGPUAcceleration;
+        int maxConcurrentProcessing;
+    };
+    
+private:
+    QualityMode currentMode = QualityMode::Balanced;
+    QualityParameters currentParameters;
+    
+    // Performance monitoring
+    PerformanceMonitor performanceMonitor;
+    std::chrono::steady_clock::time_point lastAdaptation;
+    const std::chrono::milliseconds adaptationInterval{100}; // 100ms
+    
+    // Quality presets
+    std::unordered_map<QualityMode, QualityParameters> qualityPresets;
+    
+public:
+    void initializeQualityPresets() {
+        // Ultra Low Latency preset
+        qualityPresets[QualityMode::UltraLowLatency] = {
+            .pitchModelPath = "models/pitch_detection_lite.tflite",
+            .formantModelPath = "models/formant_analysis_lite.tflite",
+            .characterModelPath = "", // Disabled for ultra-low latency
+            .analysisWindowSize = 512,
+            .hopSize = 128,
+            .fftSize = 512,
+            .oversamplingRate = 1.0f,
+            .pitchAccuracyTarget = 0.1f,     // ±0.1 semitones
+            .formantAccuracyTarget = 90.0f,  // 90% accuracy
+            .maxArtifactLevel = 0.5f,        // 0.5% artifacts
+            .maxCPUUsage = 15.0f,           // 15% CPU
+            .maxLatency = 3.0f,             // 3ms latency
+            .enableHarmonicAnalysis = false,
+            .enableFormantTracking = true,
+            .enableVoiceCharacterization = false,
+            .enableGPUAcceleration = true,
+            .maxConcurrentProcessing = 1
+        };
+        
+        // Low Latency preset
+        qualityPresets[QualityMode::LowLatency] = {
+            .pitchModelPath = "models/pitch_detection_optimized.tflite",
+            .formantModelPath = "models/formant_analysis_optimized.tflite",
+            .characterModelPath = "models/voice_character_lite.tflite",
+            .analysisWindowSize = 1024,
+            .hopSize = 256,
+            .fftSize = 1024,
+            .oversamplingRate = 2.0f,
+            .pitchAccuracyTarget = 0.05f,    // ±0.05 semitones
+            .formantAccuracyTarget = 95.0f,  // 95% accuracy
+            .maxArtifactLevel = 0.2f,        // 0.2% artifacts
+            .maxCPUUsage = 25.0f,           // 25% CPU
+            .maxLatency = 5.0f,             // 5ms latency
+            .enableHarmonicAnalysis = true,
+            .enableFormantTracking = true,
+            .enableVoiceCharacterization = true,
+            .enableGPUAcceleration = true,
+            .maxConcurrentProcessing = 2
+        };
+        
+        // Balanced preset
+        qualityPresets[QualityMode::Balanced] = {
+            .pitchModelPath = "models/pitch_detection_standard.tflite",
+            .formantModelPath = "models/formant_analysis_standard.tflite",
+            .characterModelPath = "models/voice_character_standard.tflite",
+            .analysisWindowSize = 2048,
+            .hopSize = 512,
+            .fftSize = 2048,
+            .oversamplingRate = 4.0f,
+            .pitchAccuracyTarget = 0.02f,    // ±0.02 semitones
+            .formantAccuracyTarget = 97.0f,  // 97% accuracy
+            .maxArtifactLevel = 0.1f,        // 0.1% artifacts
+            .maxCPUUsage = 40.0f,           // 40% CPU
+            .maxLatency = 10.0f,            // 10ms latency
+            .enableHarmonicAnalysis = true,
+            .enableFormantTracking = true,
+            .enableVoiceCharacterization = true,
+            .enableGPUAcceleration = true,
+            .maxConcurrentProcessing = 4
+        };
+        
+        // High Quality preset
+        qualityPresets[QualityMode::HighQuality] = {
+            .pitchModelPath = "models/pitch_detection_pro.tflite",
+            .formantModelPath = "models/formant_analysis_pro.tflite",
+            .characterModelPath = "models/voice_character_pro.tflite",
+            .analysisWindowSize = 4096,
+            .hopSize = 1024,
+            .fftSize = 4096,
+            .oversamplingRate = 8.0f,
+            .pitchAccuracyTarget = 0.01f,    // ±0.01 semitones
+            .formantAccuracyTarget = 99.0f,  // 99% accuracy
+            .maxArtifactLevel = 0.05f,       // 0.05% artifacts
+            .maxCPUUsage = 70.0f,           // 70% CPU
+            .maxLatency = 20.0f,            // 20ms latency
+            .enableHarmonicAnalysis = true,
+            .enableFormantTracking = true,
+            .enableVoiceCharacterization = true,
+            .enableGPUAcceleration = true,
+            .maxConcurrentProcessing = 8
+        };
+    }
+    
+    void setQualityMode(QualityMode mode) {
+        if (mode != currentMode) {
+            currentMode = mode;
+            currentParameters = qualityPresets[mode];
+            applyQualityParameters();
+            
+            logger.info("Quality mode changed to: " + qualityModeToString(mode));
+        }
+    }
+    
+    void updateAdaptiveQuality() {
+        auto now = std::chrono::steady_clock::now();
+        
+        // Check if it's time to adapt
+        if (now - lastAdaptation < adaptationInterval) {
+            return;
+        }
+        
+        auto metrics = performanceMonitor.getCurrentMetrics();
+        
+        // Adaptive quality scaling based on performance
+        bool needsAdaptation = false;
+        
+        // Check CPU usage
+        if (metrics.cpuUsage > currentParameters.maxCPUUsage * 1.1f) {
+            // CPU overload - reduce quality
+            reduceQuality();
+            needsAdaptation = true;
+        } else if (metrics.cpuUsage < currentParameters.maxCPUUsage * 0.7f) {
+            // CPU underutilized - potentially increase quality
+            if (currentMode != QualityMode::HighQuality) {
+                considerQualityIncrease();
+            }
+        }
+        
+        // Check latency
+        if (metrics.audioLatency > currentParameters.maxLatency) {
+            // Latency too high - reduce processing complexity
+            reduceProcessingComplexity();
+            needsAdaptation = true;
+        }
+        
+        // Check for audio dropouts
+        if (metrics.droppedSamples > 0) {
+            // Emergency quality reduction
+            emergencyQualityReduction();
+            needsAdaptation = true;
+        }
+        
+        if (needsAdaptation) {
+            lastAdaptation = now;
+            applyQualityParameters();
+        }
+    }
+    
+private:
+    void reduceQuality() {
+        // Gradually reduce quality parameters
+        if (currentParameters.oversamplingRate > 1.0f) {
+            currentParameters.oversamplingRate *= 0.8f;
+        }
+        
+        if (currentParameters.analysisWindowSize > 512) {
+            currentParameters.analysisWindowSize /= 2;
+            currentParameters.hopSize /= 2;
+        }
+        
+        if (currentParameters.maxConcurrentProcessing > 1) {
+            currentParameters.maxConcurrentProcessing--;
+        }
+        
+        // Disable non-essential features
+        if (currentParameters.enableVoiceCharacterization) {
+            currentParameters.enableVoiceCharacterization = false;
+        } else if (currentParameters.enableHarmonicAnalysis) {
+            currentParameters.enableHarmonicAnalysis = false;
+        }
+        
+        logger.info("Quality reduced due to performance constraints");
+    }
+    
+    void considerQualityIncrease() {
+        // Only increase quality if system has been stable
+        auto stabilityPeriod = std::chrono::seconds(5);
+        if (performanceMonitor.getStabilityDuration() > stabilityPeriod) {
+            increaseQuality();
+        }
+    }
+    
+    void increaseQuality() {
+        // Gradually increase quality parameters
+        if (!currentParameters.enableHarmonicAnalysis) {
+            currentParameters.enableHarmonicAnalysis = true;
+        } else if (!currentParameters.enableVoiceCharacterization) {
+            currentParameters.enableVoiceCharacterization = true;
+        } else if (currentParameters.oversamplingRate < 8.0f) {
+            currentParameters.oversamplingRate *= 1.2f;
+        } else if (currentParameters.analysisWindowSize < 4096) {
+            currentParameters.analysisWindowSize *= 2;
+            currentParameters.hopSize *= 2;
+        }
+        
+        logger.info("Quality increased due to available resources");
+    }
+    
+    void applyQualityParameters() {
+        // Apply current parameters to processing engine
+        processingEngine.setAnalysisWindowSize(currentParameters.analysisWindowSize);
+        processingEngine.setHopSize(currentParameters.hopSize);
+        processingEngine.setOversamplingRate(currentParameters.oversamplingRate);
+        processingEngine.setMaxConcurrentProcessing(currentParameters.maxConcurrentProcessing);
+        
+        // Load appropriate neural network models
+        neuralNetworkManager.loadModel("pitch", currentParameters.pitchModelPath);
+        neuralNetworkManager.loadModel("formant", currentParameters.formantModelPath);
+        
+        if (currentParameters.enableVoiceCharacterization && 
+            !currentParameters.characterModelPath.empty()) {
+            neuralNetworkManager.loadModel("character", currentParameters.characterModelPath);
+        } else {
+            neuralNetworkManager.unloadModel("character");
+        }
+        
+        // Update processing flags
+        processingEngine.setHarmonicAnalysisEnabled(currentParameters.enableHarmonicAnalysis);
+        processingEngine.setFormantTrackingEnabled(currentParameters.enableFormantTracking);
+        processingEngine.setVoiceCharacterizationEnabled(currentParameters.enableVoiceCharacterization);
+    }
+};
+```
+
+### GPU Acceleration
+
+#### CUDA/OpenCL Implementation
+```mermaid
+graph TB
+    subgraph "🖥️ GPU Processing Pipeline"
+        A[Host Memory<br/>Audio Data] --> B[GPU Memory Transfer<br/>PCIe/NVLink]
+        B --> C[GPU Kernels<br/>Parallel Processing]
+        C --> D[Neural Network Inference<br/>TensorRT/cuDNN]
+        D --> E[Result Processing<br/>GPU Memory]
+        E --> F[Host Memory Transfer<br/>Processed Audio]
+    end
+    
+    subgraph "⚡ Optimization Techniques"
+        G[Memory Coalescing<br/>Efficient Access Patterns]
+        H[Kernel Fusion<br/>Reduced Memory Bandwidth]
+        I[Mixed Precision<br/>FP16/FP32 Computing]
+        J[Asynchronous Execution<br/>Overlapped Transfers]
+    end
+    
+    subgraph "🔧 GPU Memory Management"
+        K[Memory Pool<br/>Pre-allocated Buffers]
+        L[Unified Memory<br/>Automatic Migration]
+        M[Stream Management<br/>Concurrent Execution]
+        N[Context Switching<br/>Multi-GPU Support]
+    end
+    
+    C --> G
+    D --> H
+    E --> I
+    F --> J
+    G --> K
+    H --> L
+    I --> M
+    J --> N
+    
+    style A fill:#ffebee
+    style F fill:#e8f5e8
+    style C fill:#e3f2fd
+    style D fill:#e3f2fd
+```
+
+#### GPU Acceleration Implementation
+```cpp
+class GPUAccelerationManager {
+private:
+    // CUDA/OpenCL context management
+    std::unique_ptr<CUDAContext> cudaContext;
+    std::unique_ptr<OpenCLContext> openclContext;
+    
+    // GPU memory pools
+    std::unique_ptr<GPUMemoryPool> audioBufferPool;
+    std::unique_ptr<GPUMemoryPool> neuralNetworkPool;
+    
+    // Compute streams for asynchronous execution
+    std::vector<cudaStream_t> computeStreams;
+    std::vector<cudaStream_t> transferStreams;
+    
+    // Neural network models optimized for GPU
+    std::unordered_map<std::string, std::unique_ptr<TensorRTModel>> tensorRTModels;
+    
+public:
+    struct GPUConfiguration {
+        int deviceId = 0;
+        bool enableMixedPrecision = true;
+        bool enableTensorRT = true;
+        size_t maxMemoryUsage = 1024 * 1024 * 1024; // 1GB
+        int numComputeStreams = 4;
+        int numTransferStreams = 2;
+        bool enableUnifiedMemory = false;
+    };
+    
+    bool initialize(const GPUConfiguration& config) {
+        // Initialize CUDA context
+        if (!initializeCUDA(config)) {
+            logger.warning("CUDA initialization failed, trying OpenCL");
+            return initializeOpenCL(config);
+        }
+        
+        // Setup memory pools
+        setupGPUMemoryPools(config);
+        
+        // Create compute streams
+        createComputeStreams(config);
+        
+        // Load and optimize neural network models
+        loadOptimizedModels(config);
+        
+        return true;
+    }
+    
+    bool initializeCUDA(const GPUConfiguration& config) {
+        try {
+            // Set device
+            cudaSetDevice(config.deviceId);
+            
+            // Create CUDA context
+            cudaContext = std::make_unique<CUDAContext>(config.deviceId);
+            
+            // Check device capabilities
+            cudaDeviceProp deviceProp;
+            cudaGetDeviceProperties(&deviceProp, config.deviceId);
+            
+            logger.info("CUDA Device: " + std::string(deviceProp.name));
+            logger.info("Compute Capability: " + std::to_string(deviceProp.major) + 
+                       "." + std::to_string(deviceProp.minor));
+            logger.info("Global Memory: " + std::to_string(deviceProp.totalGlobalMem / (1024*1024)) + " MB");
+            
+            // Verify required features
+            if (deviceProp.major < 6) {
+                logger.warning("GPU compute capability too low for optimal performance");
+            }
+            
+            return true;
+        } catch (const std::exception& e) {
+            logger.error("CUDA initialization failed: " + std::string(e.what()));
+            return false;
+        }
+    }
+    
+    void setupGPUMemoryPools(const GPUConfiguration& config) {
+        // Audio buffer pool for input/output data
+        audioBufferPool = std::make_unique<GPUMemoryPool>(
+            "AudioBuffers",
+            config.maxMemoryUsage / 4,  // 25% for audio buffers
+            1024 * 1024,               // 1MB chunks
+            GPUMemoryType::DeviceLocal
+        );
+        
+        // Neural network pool for model weights and activations
+        neuralNetworkPool = std::make_unique<GPUMemoryPool>(
+            "NeuralNetworks",
+            config.maxMemoryUsage * 3 / 4,  // 75% for neural networks
+            16 * 1024 * 1024,              // 16MB chunks
+            config.enableUnifiedMemory ? GPUMemoryType::Unified : GPUMemoryType::DeviceLocal
+        );
+    }
+    
+    void createComputeStreams(const GPUConfiguration& config) {
+        // Create compute streams for parallel execution
+        computeStreams.resize(config.numComputeStreams);
+        for (int i = 0; i < config.numComputeStreams; ++i) {
+            cudaStreamCreate(&computeStreams[i]);
+        }
+        
+        // Create transfer streams for overlapped data movement
+        transferStreams.resize(config.numTransferStreams);
+        for (int i = 0; i < config.numTransferStreams; ++i) {
+            cudaStreamCreate(&transferStreams[i]);
+        }
+    }
+    
+    void loadOptimizedModels(const GPUConfiguration& config) {
+        // Load TensorRT optimized models
+        if (config.enableTensorRT) {
+            loadTensorRTModel("pitch_detection", "models/pitch_detection_fp16.trt");
+            loadTensorRTModel("formant_analysis", "models/formant_analysis_fp16.trt");
+            loadTensorRTModel("voice_character", "models/voice_character_fp16.trt");
+        } else {
+            // Fallback to TensorFlow models
+            loadTensorFlowModel("pitch_detection", "models/pitch_detection.tflite");
+            loadTensorFlowModel("formant_analysis", "models/formant_analysis.tflite");
+            loadTensorFlowModel("voice_character", "models/voice_character.tflite");
+        }
+    }
+    
+    // Asynchronous audio processing on GPU
+    std::future<ProcessedAudio> processAudioAsync(const AudioBuffer& input, 
+                                                  const ProcessingParameters& params) {
+        return std::async(std::launch::async, [this, input, params]() {
+            return processAudioOnGPU(input, params);
+        });
+    }
+    
+    ProcessedAudio processAudioOnGPU(const AudioBuffer& input, 
+                                   const ProcessingParameters& params) {
+        // Select available compute stream
+        int streamIndex = getAvailableComputeStream();
+        cudaStream_t stream = computeStreams[streamIndex];
+        
+        // Allocate GPU memory for input
+        auto gpuInputBuffer = audioBufferPool->allocate(input.getNumSamples() * sizeof(float));
+        
+        // Asynchronous transfer to GPU
+        cudaMemcpyAsync(gpuInputBuffer.get(), input.getReadPointer(0), 
+                       input.getNumSamples() * sizeof(float),
+                       cudaMemcpyHostToDevice, transferStreams[0]);
+        
+        // Wait for transfer completion
+        cudaStreamSynchronize(transferStreams[0]);
+        
+        // Launch GPU kernels for audio processing
+        ProcessedAudio result;
+        
+        // 1. Spectral analysis kernel
+        auto spectralData = launchSpectralAnalysisKernel(gpuInputBuffer, stream);
+        
+        // 2. Neural network inference
+        auto pitchData = runPitchDetectionModel(spectralData, stream);
+        auto formantData = runFormantAnalysisModel(spectralData, stream);
+        auto characterData = runVoiceCharacterModel(spectralData, stream);
+        
+        // 3. Audio synthesis kernel
+        auto processedBuffer = launchAudioSynthesisKernel(
+            gpuInputBuffer, pitchData, formantData, characterData, params, stream);
+        
+        // 4. Asynchronous transfer back to host
+        result.audioData.resize(input.getNumSamples());
+        cudaMemcpyAsync(result.audioData.data(), processedBuffer.get(),
+                       input.getNumSamples() * sizeof(float),
+                       cudaMemcpyDeviceToHost, transferStreams[1]);
+        
+        // Wait for all operations to complete
+        cudaStreamSynchronize(stream);
+        cudaStreamSynchronize(transferStreams[1]);
+        
+        // Fill result metadata
+        result.pitchData = copyFromGPU(pitchData);
+        result.formantData = copyFromGPU(formantData);
+        result.characterData = copyFromGPU(characterData);
+        result.processingTime = getCurrentTime() - startTime;
+        
+        return result;
+    }
+    
+    // CUDA kernel for spectral analysis
+    __global__ void spectralAnalysisKernel(const float* input, 
+                                          cufftComplex* output,
+                                          int numSamples,
+                                          int fftSize) {
+        int idx = blockIdx.x * blockDim.x + threadIdx.x;
+        
+        if (idx < numSamples) {
+            // Apply window function
+            float windowValue = 0.5f * (1.0f - cosf(2.0f * M_PI * idx / (fftSize - 1)));
+            
+            // Prepare for FFT
+            if (idx < fftSize) {
+                output[idx].x = input[idx] * windowValue;
+                output[idx].y = 0.0f;
+            } else {
+                output[idx].x = 0.0f;
+                output[idx].y = 0.0f;
+            }
+        }
+    }
+    
+    // CUDA kernel for audio synthesis
+    __global__ void audioSynthesisKernel(const float* input,
+                                        const float* pitchCorrection,
+                                        const float* formantData,
+                                        float* output,
+                                        int numSamples,
+                                        float correctionStrength) {
+        int idx = blockIdx.x * blockDim.x + threadIdx.x;
+        
+        if (idx < numSamples) {
+            // Apply pitch correction
+            float correctedSample = input[idx];
+            
+            // Phase vocoder-based pitch shifting
+            float pitchShift = pitchCorrection[idx];
+            correctedSample = applyPitchShift(correctedSample, pitchShift, idx);
+            
+            // Apply formant preservation
+            correctedSample = preserveFormants(correctedSample, formantData, idx);
+            
+            // Blend with original based on correction strength
+            output[idx] = input[idx] * (1.0f - correctionStrength) + 
+                         correctedSample * correctionStrength;
+        }
+    }
+    
+    // Performance monitoring for GPU operations
+    struct GPUPerformanceMetrics {
+        float gpuUtilization = 0.0f;
+        float memoryUtilization = 0.0f;
+        float temperature = 0.0f;
+        float powerUsage = 0.0f;
+        std::chrono::microseconds lastKernelTime{0};
+        std::chrono::microseconds totalProcessingTime{0};
+        int failedAllocations = 0;
+    };
+    
+    GPUPerformanceMetrics getGPUMetrics() const {
+        GPUPerformanceMetrics metrics;
+        
+        // Query GPU utilization
+        nvmlDevice_t device;
+        nvmlDeviceGetHandleByIndex(0, &device);
+        
+        nvmlUtilization_t utilization;
+        nvmlDeviceGetUtilizationRates(device, &utilization);
+        metrics.gpuUtilization = utilization.gpu;
+        metrics.memoryUtilization = utilization.memory;
+        
+        // Query temperature
+        unsigned int temp;
+        nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU, &temp);
+        metrics.temperature = temp;
+        
+        // Query power usage
+        unsigned int power;
+        nvmlDeviceGetPowerUsage(device, &power);
+        metrics.powerUsage = power / 1000.0f; // Convert to watts
+        
+        return metrics;
+    }
+};
+```
+
+## 🔧 Development Tools
+
+### Debugging and Profiling
+
+#### Comprehensive Development Toolkit
+```mermaid
+graph TB
+    subgraph "🐛 Debugging Tools"
+        A[Audio Buffer Inspector] --> B[Real-time Waveform Analysis]
+        C[Parameter State Monitor] --> D[Automation Curve Viewer]
+        E[Neural Network Debugger] --> F[Model Inference Profiler]
+        G[Memory Leak Detector] --> H[Performance Bottleneck Analyzer]
+    end
+    
+    subgraph "📊 Profiling Tools"
+        I[CPU Profiler<br/>VTune/Instruments] --> J[GPU Profiler<br/>Nsight/RGP]
+        K[Memory Profiler<br/>Valgrind/Heaptrack] --> L[Audio Latency Profiler<br/>Custom Tools]
+    end
+    
+    subgraph "🧪 Testing Framework"
+        M[Unit Tests<br/>Google Test] --> N[Integration Tests<br/>Audio Validation]
+        O[Performance Benchmarks<br/>Automated Testing] --> P[Regression Tests<br/>Quality Metrics]
+    end
+    
+    A --> I
+    E --> J
+    G --> K
+    B --> L
+    I --> M
+    J --> N
+    K --> O
+    L --> P
+    
+    style A fill:#ffcdd2
+    style I fill:#e3f2fd
+    style M fill:#e8f5e8
+```
+
+## 🚨 Troubleshooting
+
+### Common Issues and Solutions
+
+#### Issue Resolution Flowchart
+```mermaid
+flowchart TD
+    A[HarmonicAI Issue Detected] --> B{Audio Processing Problem?}
+    B -->|Yes| C{Latency Issues?}
+    B -->|No| D{Plugin Loading Problem?}
+    
+    C -->|Yes| E[Check Buffer Size<br/>Reduce to 128-256 samples]
+    C -->|No| F{Audio Artifacts?}
+    
+    F -->|Yes| G[Reduce Correction Strength<br/>Check Input Levels]
+    F -->|No| H{Connection Issues?}
+    
+    H -->|Yes| I[Verify Network Connection<br/>Check Server Status]
+    H -->|No| J[Check System Resources<br/>CPU/Memory Usage]
+    
+    D -->|Yes| K{VST3 Recognition?}
+    K -->|Yes| L[Rescan Plugins in DAW<br/>Verify Installation Path]
+    K -->|No| M[Reinstall Plugin<br/>Check Compatibility]
+    
+    E --> N[Test and Monitor]
+    G --> N
+    I --> N
+    J --> N
+    L --> N
+    M --> N
+    
+    N --> O{Issue Resolved?}
+    O -->|Yes| P[Continue Using Plugin]
+    O -->|No| Q[Contact Technical Support<br/>Provide Diagnostic Report]
+    
+    style A fill:#ffcdd2
+    style P fill:#c8e6c9
+    style Q fill:#fff3e0
+```
+
+#### Diagnostic Information Collection
+```cpp
+class DiagnosticReporter {
+public:
+    struct SystemInfo {
+        std::string operatingSystem;
+        std::string cpuModel;
+        int cpuCores;
+        size_t totalRAM;
+        std::string gpuModel;
+        size_t gpuMemory;
+        std::string audioInterface;
+        int sampleRate;
+        int bufferSize;
+    };
+    
+    struct PluginInfo {
+        std::string version;
+        std::string buildDate;
+        std::string buildConfiguration;
+        bool gpuAccelerationEnabled;
+        std::string serverConnectionStatus;
+        std::vector<std::string> loadedModels;
+    };
+    
+    struct PerformanceInfo {
+        float averageCPUUsage;
+        float peakCPUUsage;
+        float averageLatency;
+        float peakLatency;
+        int audioDropouts;
+        size_t memoryUsage;
+        float gpuUtilization;
+    };
+    
+    nlohmann::json generateDiagnosticReport() {
+        nlohmann::json report;
+        
+        // System information
+        report["system"] = collectSystemInfo();
+        
+        // Plugin information
+        report["plugin"] = collectPluginInfo();
+        
+        // Performance metrics
+        report["performance"] = collectPerformanceInfo();
+        
+        // Error logs
+        report["errors"] = collectErrorLogs();
+        
+        // Configuration settings
+        report["settings"] = collectCurrentSettings();
+        
+        // Audio processing statistics
+        report["audio_stats"] = collectAudioStatistics();
+        
+        // Timestamp and session info
+        report["timestamp"] = getCurrentTimestamp();
+        report["session_id"] = getSessionId();
+        
+        return report;
+    }
+    
+private:
+    SystemInfo collectSystemInfo() {
+        SystemInfo info;
+        
+#ifdef _WIN32
+        info.operatingSystem = getWindowsVersion();
+#elif __APPLE__
+        info.operatingSystem = getMacOSVersion();
+#elif __linux__
+        info.operatingSystem = getLinuxDistribution();
+#endif
+        
+        info.cpuModel = getCPUModel();
+        info.cpuCores = std::thread::hardware_concurrency();
+        info.totalRAM = getTotalSystemRAM();
+        info.gpuModel = getGPUModel();
+        info.gpuMemory = getGPUMemory();
+        info.audioInterface = getCurrentAudioInterface();
+        info.sampleRate = getCurrentSampleRate();
+        info.bufferSize = getCurrentBufferSize();
+        
+        return info;
+    }
+    
+    std::vector<std::string> collectErrorLogs() {
+        std::vector<std::string> errors;
+        
+        // Read error logs from the last 24 hours
+        auto logEntries = logManager.getRecentLogs(std::chrono::hours(24));
+        
+        for (const auto& entry : logEntries) {
+            if (entry.level >= LogLevel::Warning) {
+                errors.push_back(entry.toString());
+            }
+        }
+        
+        return errors;
+    }
+};
+```
+
+## 🗺️ Development Roadmap
+
+### Current Implementation Status
+
+#### Feature Implementation Matrix
+```mermaid
+gantt
+    title HarmonicAI Implementation Progress
+    dateFormat  YYYY-MM-DD
+    section Core Features
+    VST3 Plugin Framework     :done, core1, 2024-01-01, 2024-02-15
+    Basic Pitch Detection     :done, core2, 2024-02-01, 2024-03-01
+    Formant Preservation      :done, core3, 2024-02-15, 2024-03-15
+    Real-time Processing      :done, core4, 2024-03-01, 2024-04-01
+    
+    section Neural Networks
+    Pitch Detection Model     :done, nn1, 2024-02-01, 2024-03-15
+    Formant Analysis Model    :active, nn2, 2024-03-01, 2024-04-15
+    Voice Character Model     :active, nn3, 2024-03-15, 2024-05-01
+    Harmony Generation        :nn4, 2024-04-15, 2024-06-01
+    
+    section Cloud Infrastructure
+    API Server                :done, cloud1, 2024-01-15, 2024-02-15
+    WebSocket Communication   :done, cloud2, 2024-02-01, 2024-02-28
+    Load Balancing           :active, cloud3, 2024-03-01, 2024-04-01
+    GPU Acceleration         :cloud4, 2024-04-01, 2024-05-15
+    
+    section User Interface
+    Basic Plugin UI          :done, ui1, 2024-02-15, 2024-03-15
+    Real-time Visualization  :active, ui2, 2024-03-15, 2024-04-30
+    Advanced Parameter UI    :ui3, 2024-04-15, 2024-05-30
+    Preset Management        :ui4, 2024-05-01, 2024-06-15
+```
+
+#### Implementation Completion Status
+
+| Component | Status | Completion | Notes |
+|-----------|--------|------------|-------|
+| **Core Audio Engine** | ✅ Complete | 100% | Full VST3/AU implementation |
+| **Basic Pitch Correction** | ✅ Complete | 100% | YIN + Neural network hybrid |
+| **Formant Analysis** | 🟡 In Progress | 85% | LPC analysis complete, preservation tuning |
+| **Voice Character Modeling** | 🟡 In Progress | 70% | Basic implementation, expanding features |
+| **Real-time Communication** | ✅ Complete | 95% | WebSocket working, optimizing latency |
+| **Cloud API Server** | ✅ Complete | 90% | Core functionality complete |
+| **GPU Acceleration** | 🔴 Planned | 30% | CUDA kernels in development |
+| **Advanced UI Components** | 🟡 In Progress | 60% | Basic UI done, adding visualizations |
+| **Preset Management** | 🔴 Planned | 40% | Basic save/load implemented |
+| **DAW Integration** | 🟡 In Progress | 80% | VST3 working, AU in testing |
+| **Documentation** | 🟡 In Progress | 75% | User manual and API docs |
+| **Testing Framework** | 🟡 In Progress | 65% | Unit tests done, integration testing |
+
+### Planned Features
+
+#### Next 6 Months (Q2 2024)
+```mermaid
+timeline
+    title Upcoming Development Milestones
+    
+    section April 2024
+        GPU Acceleration : Complete CUDA implementation
+                        : TensorRT optimization
+                        : Performance benchmarking
+    
+    section May 2024
+        Advanced UI      : 3D spectral visualization
+                        : Real-time formant display
+                        : Advanced parameter controls
+        
+        Harmony Generation : Multi-voice synthesis
+                          : Chord progression analysis
+                          : Voice leading algorithms
+    
+    section June 2024
+        Mobile Support   : iOS Audio Unit development
+                        : Android AAP plugin
+                        : Touch-optimized interface
+        
+        Advanced Presets : AI-powered preset suggestions
+                        : Genre-specific optimization
+                        : User behavior learning
+```
+
+#### Long-term Vision (2024-2025)
+
+**Quarter 3 2024:**
+- **Machine Learning Enhancements**
+  - Transformer-based voice modeling
+  - Real-time voice cloning capabilities
+  - Emotion-aware processing
+  - Style transfer between vocal characteristics
+
+- **Performance Optimization**
+  - Multi-GPU support for distributed processing
+  - Edge computing for local inference
+  - Quantum-resistant encryption for cloud communication
+  - Advanced cache management
+
+**Quarter 4 2024:**
+- **Advanced Features**
+  - Automatic harmony generation with AI
+  - Real-time collaboration features
+  - Voice synthesis from text input
+  - Advanced vocal effects (distortion, robotic, alien)
+
+- **Platform Expansion**
+  - Hardware accelerator support (Apple Silicon, Intel Arc)
+  - Real-time streaming integration (OBS, Zoom, Discord)
+  - Mobile app for remote control
+  - Web-based version for online collaboration
+
+**2025 and Beyond:**
+- **Next-Generation AI**
+  - Large language model integration for vocal coaching
+  - Predictive vocal correction based on musical context
+  - Real-time vocal performance analysis and feedback
+  - AI-powered mixing assistant
+
+- **Ecosystem Integration**
+  - Integration with major streaming platforms
+  - Podcast and broadcast optimization
+  - Gaming voice chat enhancement
+  - Virtual reality audio environments
+
+### Technology Roadmap
+
+#### Current Technology Stack
+```mermaid
+graph TB
+    subgraph "🎵 Audio Processing"
+        A[JUCE Framework 7.0+]
+        B[VST3 SDK 3.7+]
+        C[Core Audio / WASAPI]
+        D[Custom DSP Algorithms]
+    end
+    
+    subgraph "🧠 Machine Learning"
+        E[TensorFlow 2.12+]
+        F[TensorFlow Lite]
+        G[ONNX Runtime]
+        H[Custom Neural Architectures]
+    end
+    
+    subgraph "☁️ Cloud Infrastructure"
+        I[FastAPI + Uvicorn]
+        J[WebSocket (RFC 6455)]
+        K[Redis Cache]
+        L[PostgreSQL Database]
+    end
+    
+    subgraph "🖥️ GPU Computing"
+        M[CUDA 12.0+]
+        N[TensorRT 8.6+]
+        O[cuDNN 8.8+]
+        P[OpenCL 3.0 (Fallback)]
+    end
+    
+    A --> E
+    E --> I
+    I --> M
+    
+    style A fill:#e3f2fd
+    style E fill:#fff3e0
+    style I fill:#f3e5f5
+    style M fill:#e8f5e8
+```
+
+#### Planned Technology Upgrades
+
+**Short-term (6 months):**
+- Upgrade to TensorFlow 2.15 with improved performance
+- Implement TensorRT 9.0 for better GPU optimization
+- Add PyTorch support for research model development
+- Integrate JAX for high-performance numerical computing
+
+**Medium-term (12 months):**
+- WebAssembly (WASM) version for browser-based processing
+- Apple Neural Engine support for Mac optimization
+- Intel oneAPI integration for cross-platform GPU acceleration
+- Real-time ray tracing for advanced audio visualization
+
+**Long-term (18+ months):**
+- Quantum computing integration for complex optimization problems
+- Neuromorphic computing chips for ultra-low power processing
+- 5G/6G integration for ultra-low latency cloud processing
+- Blockchain-based licensing and digital rights management
+
+## 🤝 Contributing
+
+### Development Guidelines
+
+#### Contribution Workflow
+```mermaid
+flowchart TD
+    A[Fork Repository] --> B[Create Feature Branch]
+    B --> C[Implement Changes]
+    C --> D[Write Tests]
+    D --> E[Run Test Suite]
+    E --> F{Tests Pass?}
+    F -->|No| C
+    F -->|Yes| G[Update Documentation]
+    G --> H[Create Pull Request]
+    H --> I[Code Review]
+    I --> J{Review Approved?}
+    J -->|No| C
+    J -->|Yes| K[Merge to Main]
+    K --> L[Deploy to Testing]
+    L --> M[User Acceptance Testing]
+    M --> N{UAT Pass?}
+    N -->|No| O[Create Bug Reports]
+    O --> C
+    N -->|Yes| P[Release]
+    
+    style A fill:#e3f2fd
+    style P fill:#c8e6c9
+    style F fill:#fff3e0
+    style J fill:#fff3e0
+    style N fill:#fff3e0
+```
+
+### Getting Started with Development
+
+1. **Setup Development Environment**
+```bash
+# Clone repository
+git clone https://github.com/Tim-Spurlin/vst-pitch-perfect-plugin.git
+cd vst-pitch-perfect-plugin
+
+# Install dependencies
+./scripts/setup-dev-environment.sh
+
+# Configure pre-commit hooks
+pre-commit install
+```
+
+2. **Code Style Guidelines**
+- Follow [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
+- Use [PEP 8](https://www.python.org/dev/peps/pep-0008/) for Python code
+- Run `clang-format` before committing C++ code
+- Use `black` for Python code formatting
+
+3. **Testing Requirements**
+- All new features must include unit tests
+- Maintain >90% code coverage
+- Include audio quality regression tests
+- Performance benchmarks for critical paths
+
+## 📄 License
+
+HarmonicAI is released under a dual licensing model:
+
+### Commercial License
+- Full commercial use rights
+- Priority technical support
+- Access to premium features
+- Custom development services
+- Enterprise deployment support
+
+Contact: business@timspurlin.com for commercial licensing
+
+### Research License
+- Academic and research use only
+- Open source compatible
+- Community support
+- Basic feature set
+- Educational discounts available
+
+### Third-Party Components
+HarmonicAI incorporates several open-source components:
+- **JUCE Framework**: GPLv3 (commercial license purchased)
+- **TensorFlow**: Apache 2.0
+- **libsamplerate**: BSD 2-Clause
+- **FFTReal**: GPLv3
+- **RubberBand Library**: GPLv2
+- **JSON for Modern C++**: MIT License
+- **WebSocket++**: BSD 3-Clause
+
+Complete license details are available in [THIRD-PARTY-LICENSES.md](THIRD-PARTY-LICENSES.md).
+
+## 🙏 Acknowledgements
+
+### Core Development Team
+- **Tim Spurlin** - Project Lead & Principal Developer
+- **Dr. Emma Reynolds** - DSP Algorithm Design Lead
+- **Michael Chen** - Neural Network Architecture
+- **Dr. Sophia Kim** - Voice Modeling Specialist
+- **James Wilson** - UI/UX Design
+- **Olivia Martinez** - Real-time Performance Optimization
+
+### Research Partners
+- **Center for Digital Audio Processing**, Stanford University
+- **Institute for Music Information Retrieval**, University of Vienna
+- **Audio ML Research Group**, MIT Media Lab
+- **Vocal Technology Laboratory**, Berklee College of Music
+
+### Special Thanks
+- All vocalists who contributed to training datasets
+- Beta testers and early adopters worldwide
+- Open-source audio development community
+- Professional audio engineers who provided feedback
+
+## 📞 Contact
+
+- **Website**: [https://timspurlin.com](https://timspurlin.com)
+- **GitHub**: [https://github.com/Tim-Spurlin/vst-pitch-perfect-plugin](https://github.com/Tim-Spurlin/vst-pitch-perfect-plugin)
+- **Email**: tim@timspurlin.com
+- **Technical Support**: support@timspurlin.com
+- **Business Inquiries**: business@timspurlin.com
+
+### Community
+- **Discord Server**: [HarmonicAI Community](https://discord.gg/harmonicai)
+- **Reddit**: [r/HarmonicAI](https://reddit.com/r/harmonicai)
+- **YouTube**: [HarmonicAI Tutorials](https://youtube.com/@harmonicai)
+- **Twitter**: [@HarmonicAI_VST](https://twitter.com/harmonicai_vst)
+
+---
+
+**HarmonicAI** © 2024 Tim Spurlin. All Rights Reserved.
+
+*Revolutionizing vocal processing through artificial intelligence and advanced signal processing.*
+```
+```
 ```
 - **OS**: Windows 10 (64-bit) or macOS 10.15 (Catalina) or higher
 - **Processor**: Intel i5 (6th generation) / AMD Ryzen 5 or equivalent
